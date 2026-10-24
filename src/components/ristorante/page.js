@@ -91,8 +91,7 @@ export default function Page() {
       <header className="mb-6">
         <h1 className="text-2xl font-semibold">Alice e Bob al ristorante</h1>
         <p className="text-sm text-zinc-600 dark:text-zinc-400">
-          Due amici, due sale, un cameriere e una cantina un po' stregata: il{" "}
-          <TeoremaBell /> raccontato una cena alla volta.
+          Un racconto per scoprire il <TeoremaBell />.
         </p>
       </header>
 

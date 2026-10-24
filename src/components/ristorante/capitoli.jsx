@@ -2014,32 +2014,77 @@ export const CAPITOLI = [
     Testo: () => (
       <>
         <P>
-          Rinunciato agli imbrogli, il gestore del ristorante normale rifà la
-          sala: 37 tavoli esagonali incastrati a nido d'ape, ognuno con un
-          numero da 1 a 9. Il numero del tavolo decide che vino arriverà,
-          qualunque cosa chieda il cameriere. Il maître fa sedere <A /> e <B />{" "}
-          a tavoli scelti con regole sempre più ingegnose, anche allineati o con
-          lo stesso numero.
+          Rinunciato agli imbrogli, il proprietario prova un'altra strada:
+          rifà la sala del ristorante normale. Ci sono 37 tavoli esagonali
+          incastrati a nido d'ape, ognuno con un numero da 1 a 9, e il maître
+          fa sedere <A /> e <B /> con regole precise: a volte su tavoli
+          allineati, a volte su due tavoli con lo stesso numero. L'idea del
+          proprietario è ingegnosa: invece di un piano fisso, ogni sera <A /> e{" "}
+          <B /> trovano al tavolo due indizi legati fra loro, scelti dal
+          ristorante. Con il numero del tavolo e il formato servito, ciascuno
+          decide il colore.
         </P>
         <P>
-          Il risultato non cambia. Per quanto la sala sia furba, la sfida dello
-          chef si ferma a 3 sere su 4: le regole di posto cambiano quali tavoli
-          si confrontano, non il limite dei gusti decisi in anticipo. Il
-          ristorante normale resta normale.
+          Il risultato non cambia: la sfida dello chef si ferma a tre cene su
+          quattro. I numeri dei tavoli sono decisi prima che i camerieri
+          scelgano il formato, quindi sono soltanto un accordo più elaborato,
+          preparato dal ristorante invece che da <A /> e <B />, e la prova del
+          capitolo 3 vale anche per loro. Le regole di posto cambiano quali
+          tavoli si confrontano, non il limite. Il ristorante normale resta
+          normale.
         </P>
+        <details className="group rounded-lg border border-sky-200 bg-sky-50/60 p-4 dark:border-sky-900 dark:bg-sky-950/30">
+          <summary className="cursor-pointer text-sm font-semibold uppercase tracking-wide text-sky-900 dark:text-sky-200">
+            Il parallelo con la fisica
+          </summary>
+          <div className="mt-3 space-y-3">
+            <P>
+              I numeri dei tavoli rappresentano <strong>variabili nascoste
+              locali correlate</strong>: due informazioni preparate prima
+              delle misure e distribuite ai due laboratori. Possono avere una
+              causa comune, come l&apos;assegnazione del maître. Se i tavoli
+              sono gemelli, i due numeri coincidono: questa correlazione non
+              richiede alcun messaggio durante la cena.
+            </P>
+            <P>
+              <strong>Locale non significa indipendente.</strong> Gli indizi
+              possono essere correlati fra loro; ciò che conta è che la
+              risposta di Alice usi soltanto il suo indizio e il suo formato,
+              e quella di Bob soltanto i propri. Il formato corrisponde alla
+              scelta della misura, il colore al suo risultato. Nessuno usa
+              il formato scelto nell&apos;altra sala.
+            </P>
+            <P>
+              Per applicare il limite occorre anche che le scelte dei
+              camerieri siano indipendenti dagli indizi e dagli accordi:
+              essere preparati prima, da solo, non basta. Con questa ipotesi,
+              per ogni assegnazione dei numeri esiste ancora un piano di
+              risposte ai due possibili formati. Mescolare tanti piani,
+              anche con indizi perfettamente correlati, non permette di
+              superare il <strong>75% di cene offerte</strong> in media.
+            </P>
+            <P>
+              Il <TeoremaBell /> ammette già queste correlazioni dovute a
+              una preparazione comune. Il ristorante stregato non si spiega
+              quindi aggiungendo soltanto indizi locali più elaborati:
+              il riferimento quantistico raggiunge circa l&apos;85,4%, con
+              le stesse scelte indipendenti dei formati.
+            </P>
+          </div>
+        </details>
       </>
     ),
     lezione:
       "Senza imbrogli, nessuna disposizione dei tavoli porta un ristorante normale oltre il 75%.",
     Sim: SalaAlveare,
     guida: {
-      cosa: "La sfida dello chef giocata nella sala a nido d'ape. Ognuno riceve un tavolo con un numero; «domanda 1» e «domanda 2» prendono il posto di calice e bottiglia, «Sì» e «No» quello di rosso e bianco. È la simulazione originale, con il suo vocabolario.",
+      cosa: "La sfida dello chef nella sala a nido d'ape: il maître assegna due tavoli con numeri correlati, poi i camerieri scelgono indipendentemente calice o bottiglia. Nel ristorante normale ciascuno sceglie rosso o bianco usando solo il proprio numero e il proprio formato.",
       avvio:
-        "Scegli come il maître assegna i tavoli («Casuale», «Collineare», «Gemello») e una strategia, oppure un modello pronto come «Sempre Sì» o «Migliore con le sole firme». Poi premi «▶ Avvia» o «+100».",
+        "Scegli l'assegnazione dei tavoli («Casuale», «Collineare», «Gemello»). Per Alice e Bob imposta separatamente la regola con calice e con bottiglia: «regola sul numero», «regola invertita», «sempre rosso» o «sempre bianco». Puoi anche provare «Sempre rosso (75%)». Poi premi «▶ Avvia», «+1 cena» o «+100».",
       leggere:
-        "Le percentuali di vittoria della coppia che usa i numeri dei tavoli e di quella con le bottiglie gemelle, il grafico nel tempo e la tabella «Il massimo per ogni sistema».",
+        "Confronta le cene offerte nel ristorante normale e nel riferimento stregato, poi il registro «Ultime cene»: mostra numeri dei tavoli, formati e colori. La tabella «Il massimo per ogni sistema» distingue le sole regole sul numero da qualunque strategia classica ammessa.",
       mostra:
-        "Qualunque disposizione dei tavoli, la coppia che si affida ai numeri si ferma al 75%; quella con le bottiglie gemelle arriva all'85,4%.",
+        "Gli indizi correlati distribuiti dalla sala non permettono di superare il 75%: sono ancora informazioni preparate prima della scelta dei formati. Una particolare regola può fare peggio del 75%; il riferimento stregato ha invece una probabilità di successo dell'85,4%. Le frequenze osservate su poche cene possono oscillare.",
     },
   },
   {

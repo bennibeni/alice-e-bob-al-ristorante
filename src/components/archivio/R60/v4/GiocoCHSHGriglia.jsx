@@ -7,15 +7,19 @@ import {
 } from "../v1/gemelliNumerici37Config";
 import {
   MODEL_VALUES,
-  MODI,
+  MODI as MODI_ORIGINALI,
   P_QUANTISTICA,
   QUESTIONS,
-  SISTEMI,
+  SISTEMI as SISTEMI_ORIGINALI,
   creaRng,
   migliorStrategia,
   round,
   vittoriaClassicaEsatta,
 } from "./giocoGriglia";
+
+// Restaurant vocabulary only: strategy IDs and probability calculations are unchanged.
+const MODI = MODI_ORIGINALI.map(m=>({...m,testo:({firma:'regola sul numero',inversa:'regola invertita',si:'sempre rosso',no:'sempre bianco'})[m.id]}));
+const SISTEMI = SISTEMI_ORIGINALI.map(s=>({...s,nota:({casuale:'Bob riceve uno qualsiasi degli altri 35 tavoli selezionabili.',collineare:'Bob riceve un tavolo allineato con quello di Alice.',gemello:'Bob riceve un tavolo con lo stesso numero di quello di Alice.'})[s.id]}));
 
 const pct = (v, d = 1) => `${(v * 100).toFixed(d).replace(".", ",")}%`;
 const MAX_PUNTI = 300;
@@ -24,7 +28,7 @@ const MAX_LOG = 8;
 const PRESET = [
   {
     id: "firmeD1D2",
-    testo: "Firme D1 / D2",
+    testo: "Regole D1 / D2",
     s: {
       alice: [
         { d: 0, modo: "firma" },
@@ -38,7 +42,7 @@ const PRESET = [
   },
   {
     id: "sempreSi",
-    testo: "Sempre Sì (75%)",
+    testo: "Sempre rosso (75%)",
     s: {
       alice: [
         { d: 0, modo: "si" },
@@ -150,34 +154,36 @@ export default function GiocoCHSHGriglia() {
 
   return (
     <div className="space-y-6 text-sm leading-relaxed text-gray-900 dark:text-gray-100">
-      <Box titolo="Il gioco">
-        <p>A ogni round:</p>
+      <Box titolo="La sfida nella sala">
+        <p>A ogni cena:</p>
         <ol className="ml-6 mt-2 list-decimal space-y-1">
           <li>
-            Alice riceve una cella a caso; Bob una seconda cella scelta dal
-            sistema.
+            Il maître assegna ad Alice un tavolo a caso e a Bob un secondo
+            tavolo secondo il sistema scelto.
           </li>
           <li>
-            L&apos;arbitro sceglie a caso per ciascuno la{" "}
-            <strong>domanda 1</strong> o la <strong>domanda 2</strong>. Ognuno
-            sa solo il proprio numero e la propria domanda.
+            I camerieri scelgono indipendentemente per ciascuno il{" "}
+            <strong>calice</strong> o la <strong>bottiglia</strong>. Ognuno
+            conosce solo il proprio numero e il proprio formato.
           </li>
-          <li>Ognuno risponde Sì o No.</li>
+          <li>Ognuno ordina rosso o bianco.</li>
           <li>
-            Vincono se le risposte <strong>coincidono</strong>, tranne quando
-            entrambi hanno la domanda 2: lì devono essere{" "}
-            <strong>diverse</strong>.
+            La cena è offerta se i colori <strong>coincidono</strong>, tranne
+            quando entrambi ricevono una bottiglia: lì devono essere{" "}
+            <strong>diversi</strong>.
           </li>
         </ol>
         <p className="mt-2">
-          La coppia classica risponde usando i numeri delle celle (la loro
-          &quot;firma&quot;) oppure in modo fisso. La coppia quantistica ignora
-          i numeri e misura una coppia di qubit intrecciati.
+          Nel ristorante normale, per ogni formato si può applicare una
+          regola al numero del tavolo oppure scegliere un colore fisso. Una
+          regola vera dà rosso, una falsa dà bianco; la regola invertita
+          scambia i colori. Il riferimento stregato non usa i numeri:
+          il programma ne simula le correlazioni quantistiche.
         </p>
       </Box>
 
       <div className="grid gap-4 lg:grid-cols-[1fr_auto]">
-        <Box titolo="La strategia classica">
+        <Box titolo="Il piano del ristorante normale">
           <div className="mb-3 flex flex-wrap items-center gap-2">
             <span className="text-xs text-gray-500">Sistema:</span>
             {SISTEMI.map((s) => (
@@ -207,11 +213,11 @@ export default function GiocoCHSHGriglia() {
                 cambiaStrategia(migliorStrategia(sistema, true).strategia)
               }
             >
-              Migliore con le sole firme
+              Migliore con le sole regole sul numero
             </Btn>
           </div>
         </Box>
-        <Box titolo="L'ultimo round">
+        <Box titolo="L'ultima cena">
           <Griglia ultimo={ultimo} />
         </Box>
       </div>
@@ -221,7 +227,7 @@ export default function GiocoCHSHGriglia() {
           {inCorso ? "⏸ Pausa" : "▶ Avvia"}
         </Btn>
         <Btn onClick={() => gioca(1)} disabled={inCorso}>
-          +1 round
+          +1 cena
         </Btn>
         <Btn onClick={() => gioca(100)} disabled={inCorso}>
           +100
@@ -252,20 +258,20 @@ export default function GiocoCHSHGriglia() {
           </select>
         </label>
         <span className="text-gray-500">
-          Round: {stato.n.toLocaleString("it-IT")}
+          Cene: {stato.n.toLocaleString("it-IT")}
         </span>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
         <Punteggio
-          titolo="Coppia classica (firme dei numeri)"
+          titolo="Ristorante normale (numeri e formati)"
           v={stato.vc}
           n={stato.n}
           teoria={pClassica}
           colore="#d97706"
         />
         <Punteggio
-          titolo="Coppia quantistica (qubit)"
+          titolo="Riferimento stregato (simulato)"
           v={stato.vq}
           n={stato.n}
           teoria={P_QUANTISTICA}
@@ -273,11 +279,11 @@ export default function GiocoCHSHGriglia() {
         />
       </div>
 
-      <Box titolo="Percentuale di vittorie nel tempo">
+      <Box titolo="Percentuale di cene offerte nel tempo">
         <Grafico c={stato.serieC} q={stato.serieQ} />
       </Box>
 
-      <Box titolo="Ultimi round">
+      <Box titolo="Ultime cene">
         <Log log={stato.log} />
       </Box>
 
@@ -286,9 +292,9 @@ export default function GiocoCHSHGriglia() {
           <thead>
             <tr className="text-left text-xs text-gray-500">
               <th className="py-1">Sistema</th>
-              <th>Solo firme</th>
+              <th>Solo regole sul numero</th>
               <th>Qualsiasi strategia classica</th>
-              <th>Qubit</th>
+              <th>Riferimento stregato</th>
             </tr>
           </thead>
           <tbody>
@@ -306,38 +312,38 @@ export default function GiocoCHSHGriglia() {
           </tbody>
         </table>
         <p className="mt-2 text-xs text-gray-500">
-          Valori esatti, calcolati su tutte le coppie di celle del sistema e
-          sulle quattro coppie di domande.
+          Valori esatti, calcolati su tutte le coppie di tavoli del sistema e
+          sulle quattro coppie di formati.
         </p>
       </Box>
 
       <Dettagli titolo="Che cosa insegna la griglia">
         <p>
-          I numeri delle due celle sono un&apos;informazione condivisa,
-          preparata prima del round: per la fisica sono{" "}
+          I numeri dei due tavoli sono un&apos;informazione condivisa,
+          preparata prima della scelta dei formati: per la fisica sono{" "}
           <strong>variabili nascoste locali</strong>. Con il sistema casuale
-          sono quasi indipendenti e le firme arrivano a stento al 53%; con
+          sono quasi indipendenti e le sole regole sul numero arrivano a stento al 53%; con
           quello collineare la geometria della griglia li correla un po&apos; di
           più (55%).
         </p>
         <p className="mt-2">
-          Il sistema <strong>gemello</strong> è il caso estremo: Bob riceve una
-          cella con lo stesso valore di Alice, cioè la correlazione più forte
+          Il sistema <strong>gemello</strong> è il caso estremo: Bob riceve un
+          tavolo con lo stesso numero di quello di Alice, cioè la correlazione più forte
           possibile. Eppure anche lì il massimo è il <strong>75%</strong>, lo
-          stesso che si ottiene rispondendo sempre Sì senza guardare i numeri. È
+          stesso che si ottiene ordinando sempre rosso senza guardare i numeri. È
           il teorema CHSH: nessuna informazione condivisa in anticipo, per
           quanto ricca o ben correlata, supera il 75%.
         </p>
         <p className="mt-2">
-          I qubit non portano nessuna informazione sui numeri, eppure arrivano
-          all&apos;85,4%. Non sono una &quot;firma&quot; migliore: sono un tipo
-          di correlazione che nessuna firma può imitare.
+          Il riferimento stregato non usa i numeri, eppure ha una probabilità
+          di successo dell&apos;85,4%. Non è una regola sul numero migliore:
+          è un tipo di correlazione che nessun accordo locale può imitare.
         </p>
       </Dettagli>
 
       <Dettagli titolo="Dalla percentuale al valore S">
         <p>
-          Con quattro coppie di domande ugualmente probabili, la probabilità di
+          Con quattro coppie di formati ugualmente probabili, la probabilità di
           vittoria P e il valore CHSH S sono legati da P = 1/2 + S/8, cioè S =
           8P − 4.
         </p>
@@ -350,9 +356,8 @@ export default function GiocoCHSHGriglia() {
           </li>
         </ul>
         <p className="mt-2">
-          Le versioni v2 e v3 misurano invece le correlazioni E fra le domande
-          senza una regola di vittoria: è la stessa disuguaglianza vista
-          dall&apos;altro lato.
+          Il numero S riassume le correlazioni fra i colori per le quattro
+          coppie di formati, come nel registro del maître del capitolo 3.
         </p>
       </Dettagli>
     </div>
@@ -443,10 +448,10 @@ function EditorStrategia({ strategia, onChange }) {
   return (
     <table>
       <tbody>
-        {riga("alice", 0, "Alice, domanda 1")}
-        {riga("alice", 1, "Alice, domanda 2")}
-        {riga("bob", 0, "Bob, domanda 1")}
-        {riga("bob", 1, "Bob, domanda 2")}
+        {riga("alice", 0, "Alice, calice")}
+        {riga("alice", 1, "Alice, bottiglia")}
+        {riga("bob", 0, "Bob, calice")}
+        {riga("bob", 1, "Bob, bottiglia")}
       </tbody>
     </table>
   );
@@ -464,7 +469,7 @@ function Punteggio({ titolo, v, n, teoria, colore }) {
           {n ? pct(v / n) : "—"}
         </div>
         <div className="text-xs tabular-nums text-gray-500">
-          {v.toLocaleString("it-IT")} vittorie su {n.toLocaleString("it-IT")}
+          {v.toLocaleString("it-IT")} cene offerte su {n.toLocaleString("it-IT")}
         </div>
       </div>
       <div className="text-right text-xs text-gray-500">
@@ -499,7 +504,7 @@ function Griglia({ ultimo }) {
         viewBox={`${minX} ${minY} ${W} ${H}`}
         className="w-full"
         role="img"
-        aria-label="Griglia a 37 celle"
+        aria-label="Sala a nido d’ape con 37 tavoli"
       >
         {MODEL_COORDS.map((c, idx) => {
           const { x, y } = pos(c);
@@ -561,7 +566,7 @@ function Grafico({ c, q }) {
       viewBox={`0 0 ${W} ${H}`}
       className="w-full"
       role="img"
-      aria-label="Andamento delle vittorie"
+      aria-label="Andamento delle cene offerte"
     >
       {[0.3, 0.5, 0.7, 0.9].map((t) => (
         <g key={t}>
@@ -638,9 +643,9 @@ function Grafico({ c, q }) {
 function Log({ log }) {
   if (!log.length)
     return (
-      <p className="text-gray-500">Premi Avvia o aggiungi qualche round.</p>
+      <p className="text-gray-500">Premi Avvia o aggiungi qualche cena.</p>
     );
-  const sn = (v) => (v ? "Sì" : "No");
+  const sn = (v) => (v ? "rosso" : "bianco");
   const esito = (r) => (
     <span
       className={
@@ -658,9 +663,9 @@ function Log({ log }) {
         <thead>
           <tr className="text-left text-xs text-gray-500">
             <th className="py-1">Numeri (Alice · Bob)</th>
-            <th>Domande</th>
-            <th>Classica</th>
-            <th>Quantistica</th>
+            <th>Formati</th>
+            <th>Normale</th>
+            <th>Stregato</th>
           </tr>
         </thead>
         <tbody>
@@ -673,7 +678,7 @@ function Log({ log }) {
                 {MODEL_VALUES[r.i]} · {MODEL_VALUES[r.j]}
               </td>
               <td>
-                {r.x + 1} · {r.y + 1}{" "}
+                {r.x === 0 ? "calice" : "bottiglia"} · {r.y === 0 ? "calice" : "bottiglia"}{" "}
                 {r.x & r.y ? "(devono differire)" : "(devono coincidere)"}
               </td>
               <td>{esito(r.classica)}</td>
