@@ -12,6 +12,7 @@ import { Problema } from "./problema";
 import { LezioneEsterna } from "./lezione";
 import { TabellaAccordi } from "./sim/TabellaAccordi";
 import { TeoremaBell } from "./teorema";
+import { CodiceCalcolatrice } from "./CodiceCalcolatrice";
 
 function Caricamento() {
   return (
@@ -2044,7 +2045,7 @@ export const CAPITOLI = [
           «con il calice, rosso per i numeri pari e bianco per i dispari».
           Prima che i camerieri scelgano i formati, calcola la probabilità
           di vincere la sfida per ogni piano esaminato
-          e indica allo chef quello con la probabilità più alta. Può scegliere
+          e indica allo chef quello con la probabilità più alta.<CodiceCalcolatrice /> Può scegliere
           anche un colore fisso, se i numeri non migliorano il risultato.
         </P>
         <P>
