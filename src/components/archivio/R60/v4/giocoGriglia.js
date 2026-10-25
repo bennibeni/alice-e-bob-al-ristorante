@@ -54,18 +54,18 @@ export const GEMELLI = (() => {
 
 export const SISTEMI = [
   {
-    id: "casuale",
-    testo: "Casuale",
-    nota: "Bob riceve una qualsiasi delle altre 35 celle.",
+    id: "separati",
+    testo: "Non allineati, numeri diversi",
+    nota: "I tavoli non hanno una linea comune e hanno numeri diversi.",
   },
   {
     id: "collineare",
-    testo: "Collineare",
+    testo: "Stessa linea",
     nota: "Bob riceve una cella allineata con quella di Alice.",
   },
   {
     id: "gemello",
-    testo: "Gemello",
+    testo: "Gemelli",
     nota: "Bob riceve una cella con lo stesso valore: correlazione perfetta.",
   },
 ];
@@ -73,6 +73,9 @@ export const SISTEMI = [
 export function candidatiBob(i, sistema) {
   if (sistema === "collineare") return COLLINEARI[i];
   if (sistema === "gemello") return GEMELLI[i];
+  if (sistema === "separati") return ATTIVE.filter(
+    (j) => j !== i && !COLLINEARI[i].includes(j) && MODEL_VALUES[j] !== MODEL_VALUES[i],
+  );
   return ATTIVE.filter((j) => j !== i);
 }
 

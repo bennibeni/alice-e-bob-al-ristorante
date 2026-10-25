@@ -1,15 +1,15 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Vino } from "../../../ristorante/sim/ui";
 import {
   MODEL_COORDS,
   MODEL_EXCLUDED_INDEX,
 } from "../v1/gemelliNumerici37Config";
 import {
   MODEL_VALUES,
-  MODI as MODI_ORIGINALI,
+  ATTIVE, candidatiBob, rispondi, vince,
   P_QUANTISTICA,
-  QUESTIONS,
   SISTEMI as SISTEMI_ORIGINALI,
   creaRng,
   migliorStrategia,
@@ -18,52 +18,23 @@ import {
 } from "./giocoGriglia";
 
 // Restaurant vocabulary only: strategy IDs and probability calculations are unchanged.
-const MODI = MODI_ORIGINALI.map(m=>({...m,testo:({firma:'regola sul numero',inversa:'regola invertita',si:'sempre rosso',no:'sempre bianco'})[m.id]}));
-const SISTEMI = SISTEMI_ORIGINALI.map(s=>({...s,nota:({casuale:'Bob riceve uno qualsiasi degli altri 35 tavoli selezionabili.',collineare:'Bob riceve un tavolo allineato con quello di Alice.',gemello:'Bob riceve un tavolo con lo stesso numero di quello di Alice.'})[s.id]}));
+const SISTEMI = SISTEMI_ORIGINALI.map(s=>({...s,nota:({separati:'Tavoli non allineati, numeri diversi.',collineare:'Tavoli allineati, numeri diversi.',gemello:'Stesso numero, tavoli non allineati.'})[s.id]}));
 
 const pct = (v, d = 1) => `${(v * 100).toFixed(d).replace(".", ",")}%`;
 const MAX_PUNTI = 300;
 const MAX_LOG = 8;
+const MAX_CENE = 200;
 
-const PRESET = [
-  {
-    id: "firmeD1D2",
-    testo: "Regole D1 / D2",
-    s: {
-      alice: [
-        { d: 0, modo: "firma" },
-        { d: 1, modo: "firma" },
-      ],
-      bob: [
-        { d: 0, modo: "firma" },
-        { d: 1, modo: "firma" },
-      ],
-    },
-  },
-  {
-    id: "sempreSi",
-    testo: "Sempre rosso (75%)",
-    s: {
-      alice: [
-        { d: 0, modo: "si" },
-        { d: 0, modo: "si" },
-      ],
-      bob: [
-        { d: 0, modo: "si" },
-        { d: 0, modo: "si" },
-      ],
-    },
-  },
-];
-
-const VELOCITA = [
-  { id: "lenta", testo: "Lenta", ms: 600, perTick: 1 },
-  { id: "media", testo: "Media", ms: 100, perTick: 2 },
-  { id: "veloce", testo: "Veloce", ms: 40, perTick: 50 },
-];
+const ROSSO_PLAN={alice:[{d:0,modo:'si'},{d:0,modo:'si'}],bob:[{d:0,modo:'si'},{d:0,modo:'si'}]};
+function descriviRegola(r){
+ if(r.modo==='si')return 'Sempre rosso: il numero non conta.';
+ if(r.modo==='no')return 'Sempre bianco: il numero non conta.';
+ const condizione=['il numero è pari','il numero è multiplo di 3','il numero è primo','il resto della divisione del numero per 3 è 1'][r.d];
+ return r.modo==='inversa'?'Bianco se '+condizione+'; altrimenti rosso.':'Rosso se '+condizione+'; altrimenti bianco.';
+}
 
 function statoVuoto() {
-  return { n: 0, vc: 0, vq: 0, serieC: [], serieQ: [], log: [] };
+  return { n: 0, vc: 0, vb: 0, vq: 0, serieC: [], serieB: [], serieQ: [], log: [] };
 }
 
 function aggiungi(serie, n, p) {
@@ -75,16 +46,12 @@ function aggiungi(serie, n, p) {
 
 export default function GiocoCHSHGriglia() {
   const [sistema, setSistema] = useState("collineare");
-  const [strategia, setStrategia] = useState(PRESET[0].s);
+
   const [stato, setStato] = useState(statoVuoto);
   const [inCorso, setInCorso] = useState(false);
-  const [velocita, setVelocita] = useState("media");
   const rng = useRef(creaRng(37));
+  const ceneServite=useRef(0);
 
-  const pClassica = useMemo(
-    () => vittoriaClassicaEsatta(strategia, sistema),
-    [strategia, sistema],
-  );
   const migliori = useMemo(
     () =>
       SISTEMI.map((s) => ({
@@ -95,8 +62,15 @@ export default function GiocoCHSHGriglia() {
     [],
   );
 
+  const ottimo=migliori.find(m=>m.id===sistema);
+  // Prefer a number-dependent optimum when it ties the unrestricted optimum.
+  const risultato=Math.abs(ottimo.firme.p-ottimo.tutte.p)<1e-12?ottimo.firme:ottimo.tutte;
+  const strategia=risultato.strategia;
+  const pClassica=risultato.p;
+
   const azzera = useCallback(() => {
     rng.current = creaRng(Math.floor(Math.random() * 1e9));
+    ceneServite.current=0;
     setStato(statoVuoto());
   }, []);
 
@@ -107,30 +81,37 @@ export default function GiocoCHSHGriglia() {
     setInCorso(false);
   };
   const cambiaSistema = conAzzeramento(setSistema);
-  const cambiaStrategia = conAzzeramento(setStrategia);
 
   const gioca = useCallback(
     (quanti) => {
+      const count=Math.min(quanti,MAX_CENE-ceneServite.current);
+      if(count<=0)return;
       const rr = [];
-      for (let k = 0; k < quanti; k++)
+      for (let k = 0; k < count; k++)
         rr.push(round(rng.current, strategia, sistema));
+      ceneServite.current+=rr.length;
+      if(ceneServite.current>=MAX_CENE)setInCorso(false);
       setStato((prev) => {
-        let { n, vc, vq, serieC, serieQ } = prev;
-        const passo = Math.max(1, Math.floor(quanti / 150));
+        let { n, vc, vb, vq, serieC, serieB, serieQ } = prev;
+        const passo = Math.max(1, Math.floor(quanti / MAX_CENE));
         rr.forEach((r, k) => {
           n += 1;
           vc += r.classica.vinto ? 1 : 0;
+          vb += (r.x & r.y) ? 0 : 1;
           vq += r.quantistica.vinto ? 1 : 0;
           if ((k + 1) % passo === 0 || k === rr.length - 1) {
             serieC = aggiungi(serieC, n, vc / n);
+            serieB = aggiungi(serieB, n, vb / n);
             serieQ = aggiungi(serieQ, n, vq / n);
           }
         });
         return {
           n,
           vc,
+          vb,
           vq,
           serieC,
+          serieB,
           serieQ,
           log: [...rr.slice(-MAX_LOG).reverse(), ...prev.log].slice(0, MAX_LOG),
         };
@@ -145,12 +126,12 @@ export default function GiocoCHSHGriglia() {
   }, [gioca]);
   useEffect(() => {
     if (!inCorso) return undefined;
-    const v = VELOCITA.find((s) => s.id === velocita);
-    const id = setInterval(() => giocaRef.current(v.perTick), v.ms);
+    const id = setInterval(() => giocaRef.current(2), 100);
     return () => clearInterval(id);
-  }, [inCorso, velocita]);
+  }, [inCorso]);
 
   const ultimo = stato.log[0];
+  const esempio=ultimo || {i:ATTIVE[0],j:candidatiBob(ATTIVE[0],sistema)[0]};
 
   return (
     <div className="space-y-6 text-sm leading-relaxed text-gray-900 dark:text-gray-100">
@@ -158,15 +139,14 @@ export default function GiocoCHSHGriglia() {
         <p>A ogni cena:</p>
         <ol className="ml-6 mt-2 list-decimal space-y-1">
           <li>
-            Il maître assegna ad Alice un tavolo a caso e a Bob un secondo
-            tavolo secondo il sistema scelto.
+            Il maître assegna ad Alice uno dei 36 tavoli disponibili, a caso,
+            e a Bob un altro tavolo compatibile con l’assegnazione scelta.
           </li>
           <li>
             I camerieri scelgono indipendentemente per ciascuno il{" "}
-            <strong>calice</strong> o la <strong>bottiglia</strong>. Ognuno
-            conosce solo il proprio numero e il proprio formato.
+            <strong>calice</strong> o la <strong>bottiglia</strong>.
           </li>
-          <li>Ognuno ordina rosso o bianco.</li>
+          <li>Lo chef serve rosso o bianco applicando il piano della calcolatrice: per ogni cliente usa il numero del suo tavolo e il formato scelto dal suo cameriere.</li>
           <li>
             La cena è offerta se i colori <strong>coincidono</strong>, tranne
             quando entrambi ricevono una bottiglia: lì devono essere{" "}
@@ -174,16 +154,16 @@ export default function GiocoCHSHGriglia() {
           </li>
         </ol>
         <p className="mt-2">
-          Nel ristorante normale, per ogni formato si può applicare una
-          regola al numero del tavolo oppure scegliere un colore fisso. Una
-          regola vera dà rosso, una falsa dà bianco; la regola invertita
-          scambia i colori. Il riferimento stregato non usa i numeri:
-          il programma ne simula le correlazioni quantistiche.
+          La calcolatrice ha già scelto il piano prima dell’estrazione dei
+          formati. Le regole sono mostrate qui sotto; possono usare i numeri
+          oppure prescrivere un colore fisso. «Sempre rosso» e il riferimento
+          stregato sono confronti sulle stesse cene; le statistiche
+          quantistiche sono simulate dal programma.
         </p>
       </Box>
 
       <div className="grid gap-4 lg:grid-cols-[1fr_auto]">
-        <Box titolo="Il piano del ristorante normale">
+        <Box titolo={<span className="inline-flex items-center gap-2">Il piano scelto dalla calcolatrice<svg viewBox="0 0 24 28" width="24" height="28" fill="none" aria-hidden="true" className="shrink-0 text-amber-700 dark:text-amber-400"><rect x="2" y="1" width="20" height="26" rx="4" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeWidth="1.7"/><rect x="6" y="5" width="12" height="5" rx="1" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeWidth="1.3"/><path d="M7 15h1m4 0h1m4 0h1M7 19h1m4 0h1m4 0h1M7 23h1m4 0h1m4 0h1" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/></svg></span>}>
           <div className="mb-3 flex flex-wrap items-center gap-2">
             <span className="text-xs text-gray-500">Sistema:</span>
             {SISTEMI.map((s) => (
@@ -197,43 +177,27 @@ export default function GiocoCHSHGriglia() {
               </Btn>
             ))}
           </div>
-          <p className="mb-3 text-xs text-gray-500">
+          <p className="mb-3 text-sm font-semibold text-gray-900 dark:text-gray-100">
             {SISTEMI.find((s) => s.id === sistema).nota}
           </p>
-          <EditorStrategia strategia={strategia} onChange={cambiaStrategia} />
-          <div className="mt-3 flex flex-wrap gap-2">
-            {PRESET.map((p) => (
-              <Btn key={p.id} piccolo onClick={() => cambiaStrategia(p.s)}>
-                {p.testo}
-              </Btn>
-            ))}
-            <Btn
-              piccolo
-              onClick={() =>
-                cambiaStrategia(migliorStrategia(sistema, true).strategia)
-              }
-            >
-              Migliore con le sole regole sul numero
-            </Btn>
-          </div>
+          <div className="space-y-3">
+          <div className="mt-3 overflow-x-auto"><table className="w-full text-left text-xs"><caption className="sr-only">Colori serviti dallo chef secondo il piano scelto</caption><thead><tr><th scope="col" className="pr-4">Cliente</th><th scope="col" className="px-2">Con il calice</th><th scope="col" className="px-2">Con la bottiglia</th></tr></thead><tbody>{['alice','bob'].map(chi=><tr key={chi} className="border-t border-gray-200"><th className="py-2 pr-2">{chi==='alice'?'Alice':'Bob'}</th><td className="p-2">{descriviRegola(strategia[chi][0])}</td><td className="p-2">{descriviRegola(strategia[chi][1])}</td></tr>)}</tbody></table></div></div>
+          <p className="mt-2 text-xs text-gray-500">Cambiare assegnazione azzera le cene e ricalcola il piano. Il confronto «Sempre rosso» usa gli stessi formati estratti per il piano ottimizzato.</p>
         </Box>
-        <Box titolo="L'ultima cena">
+        <Box titolo="Cena per cena">
           <Griglia ultimo={ultimo} />
         </Box>
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
-        <Btn primario onClick={() => setInCorso((v) => !v)}>
-          {inCorso ? "⏸ Pausa" : "▶ Avvia"}
+        <Btn primario disabled={stato.n>=MAX_CENE} onClick={() => setInCorso((v) => !v)}>
+          {stato.n>=MAX_CENE ? "200 cene concluse" : inCorso ? "⏸ Pausa" : "▶ Avvia"}
         </Btn>
-        <Btn onClick={() => gioca(1)} disabled={inCorso}>
+        <Btn onClick={() => gioca(1)} disabled={inCorso || stato.n>=MAX_CENE}>
           +1 cena
         </Btn>
-        <Btn onClick={() => gioca(100)} disabled={inCorso}>
-          +100
-        </Btn>
-        <Btn onClick={() => gioca(10000)} disabled={inCorso}>
-          +10 000
+        <Btn onClick={() => gioca(MAX_CENE)} disabled={inCorso || stato.n>=MAX_CENE}>
+          Completa 200 cene
         </Btn>
         <Btn
           onClick={() => {
@@ -243,35 +207,26 @@ export default function GiocoCHSHGriglia() {
         >
           ↺ Ricomincia
         </Btn>
-        <label className="ml-2 flex items-center gap-2">
-          Velocità
-          <select
-            value={velocita}
-            onChange={(e) => setVelocita(e.target.value)}
-            className="rounded border border-gray-400 bg-transparent px-2 py-1 dark:bg-gray-900"
-          >
-            {VELOCITA.map((v) => (
-              <option key={v.id} value={v.id}>
-                {v.testo}
-              </option>
-            ))}
-          </select>
-        </label>
+
         <span className="text-gray-500">
-          Cene: {stato.n.toLocaleString("it-IT")}
+          Cene: {stato.n.toLocaleString("it-IT")} / {MAX_CENE}
         </span>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <p className="text-xs text-gray-500" role="status">{stato.n>=MAX_CENE ? "Esperimento concluso: premi Ricomincia per ripetere. Su 200 cene i risultati possono differire dalle probabilità esatte." : "Arresto automatico a 200 cene per ciascun ristorante. La tabella mostra le probabilità esatte, indipendenti dalla durata della simulazione."}</p>
+      <p className="rounded-lg bg-amber-50 p-4 font-medium dark:bg-amber-950/30">Il piano della calcolatrice è buono tanto quanto “Sempre rosso”: entrambi vincono mediamente 3 volte su 4.</p>
+      <section className="space-y-3"><h3 className="font-semibold">Quattro possibili cene, due piani a confronto</h3><div className="grid gap-4 lg:grid-cols-2"><TabellaQuattro titolo="Sempre rosso" strategia={ROSSO_PLAN} esempio={esempio}/><TabellaQuattro titolo="Piano dalla calcolatrice" strategia={strategia} esempio={esempio}/></div></section>
+      <div className="grid gap-4 xl:grid-cols-3">
+        <Punteggio titolo="Riferimento: sempre rosso" v={stato.vb} n={stato.n} teoria={.75} colore="#64748b"/>
         <Punteggio
-          titolo="Ristorante normale (numeri e formati)"
+          titolo="Riferimento: piano ottimizzato"
           v={stato.vc}
           n={stato.n}
           teoria={pClassica}
           colore="#d97706"
         />
         <Punteggio
-          titolo="Riferimento stregato (simulato)"
+          titolo="Riferimento: stregato"
           v={stato.vq}
           n={stato.n}
           teoria={P_QUANTISTICA}
@@ -280,20 +235,17 @@ export default function GiocoCHSHGriglia() {
       </div>
 
       <Box titolo="Percentuale di cene offerte nel tempo">
-        <Grafico c={stato.serieC} q={stato.serieQ} />
+        <div className="mb-3 flex flex-wrap gap-4 text-xs" aria-label="Legenda delle curve"><span className="flex items-center gap-2"><i className="inline-block h-1 w-5 bg-slate-500"/>Sempre rosso</span><span className="flex items-center gap-2"><i className="inline-block h-1 w-5 bg-amber-600"/>Piano ottimizzato</span><span className="flex items-center gap-2"><i className="inline-block h-1 w-5 bg-violet-600"/>Stregato</span></div><Grafico b={stato.serieB} c={stato.serieC} q={stato.serieQ} /><p className="mt-2 text-xs text-gray-500">Le tre curve usano gli stessi formati estratti in ogni cena. Se i due piani classici vincono nelle stesse cene, le loro curve coincidono. Le linee tratteggiate indicano il 75% classico e l’85,4% quantistico.</p>
       </Box>
 
-      <Box titolo="Ultime cene">
-        <Log log={stato.log} />
-      </Box>
 
-      <Box titolo="Il massimo per ogni sistema (ricerca su tutte le 65 536 strategie)">
+      <Box titolo="Confronto esatto delle tre assegnazioni">
         <table className="w-full text-sm">
           <thead>
             <tr className="text-left text-xs text-gray-500">
               <th className="py-1">Sistema</th>
-              <th>Solo regole sul numero</th>
-              <th>Qualsiasi strategia classica</th>
+              <th>Sempre rosso</th>
+              <th>Piano dalla calcolatrice</th>
               <th>Riferimento stregato</th>
             </tr>
           </thead>
@@ -304,7 +256,7 @@ export default function GiocoCHSHGriglia() {
                 className="border-t border-gray-200 dark:border-gray-800"
               >
                 <td className="py-1">{m.testo}</td>
-                <td className="tabular-nums">{pct(m.firme.p)}</td>
+                <td className="tabular-nums">{pct(vittoriaClassicaEsatta(ROSSO_PLAN,m.id))}</td>
                 <td className="tabular-nums">{pct(m.tutte.p)}</td>
                 <td className="tabular-nums">{pct(P_QUANTISTICA)}</td>
               </tr>
@@ -312,33 +264,13 @@ export default function GiocoCHSHGriglia() {
           </tbody>
         </table>
         <p className="mt-2 text-xs text-gray-500">
-          Valori esatti, calcolati su tutte le coppie di tavoli del sistema e
-          sulle quattro coppie di formati.
+          Valori esatti: tutte le coppie di tavoli ammesse e le quattro coppie di formati, con i loro pesi. La ricerca confronta tutte le 65.536 combinazioni della famiglia di regole disponibile (quattro proprietà del numero, dirette o invertite, e colori fissi). Il miglior piano ammesso raggiunge il 75%: il limite CHSH esclude che strategie esterne alla famiglia possano superarlo. Le frequenze simulate possono oscillare, soprattutto su poche cene.
         </p>
       </Box>
 
       <Dettagli titolo="Che cosa insegna la griglia">
-        <p>
-          I numeri dei due tavoli sono un&apos;informazione condivisa,
-          preparata prima della scelta dei formati: per la fisica sono{" "}
-          <strong>variabili nascoste locali</strong>. Con il sistema casuale
-          sono quasi indipendenti e le sole regole sul numero arrivano a stento al 53%; con
-          quello collineare la geometria della griglia li correla un po&apos; di
-          più (55%).
-        </p>
-        <p className="mt-2">
-          Il sistema <strong>gemello</strong> è il caso estremo: Bob riceve un
-          tavolo con lo stesso numero di quello di Alice, cioè la correlazione più forte
-          possibile. Eppure anche lì il massimo è il <strong>75%</strong>, lo
-          stesso che si ottiene ordinando sempre rosso senza guardare i numeri. È
-          il teorema CHSH: nessuna informazione condivisa in anticipo, per
-          quanto ricca o ben correlata, supera il 75%.
-        </p>
-        <p className="mt-2">
-          Il riferimento stregato non usa i numeri, eppure ha una probabilità
-          di successo dell&apos;85,4%. Non è una regola sul numero migliore:
-          è un tipo di correlazione che nessun accordo locale può imitare.
-        </p>
+        <p>La disposizione dei tavoli cambia quali numeri vengono assegnati insieme. Nei gemelli coincidono perfettamente; negli altri casi sono diversi. Questi vincoli possono cambiare il rendimento di una particolare regola, ma non alzano il miglior risultato ammesso: <strong>mediamente tre cene offerte su quattro</strong>.</p>
+        <p className="mt-2">La calcolatrice ottimizza soltanto nella famiglia dichiarata. Il limite generale del 75% deriva invece dalla dimostrazione CHSH e vale anche per altri piani locali, purché i formati siano scelti indipendentemente dalla preparazione, le quattro coppie siano equiprobabili e non si usi il formato dell’altra sala per decidere un colore. La simulazione illustra questa differenza: non è un esperimento fisico che dimostra la nonlocalità.</p>
       </Dettagli>
 
       <Dettagli titolo="Dalla percentuale al valore S">
@@ -403,60 +335,6 @@ function Btn({ children, onClick, primario, attivo, piccolo, disabled }) {
   );
 }
 
-function EditorStrategia({ strategia, onChange }) {
-  const riga = (chi, k, etichetta) => {
-    const r = strategia[chi][k];
-    const cambia = (campo, valore) => {
-      const nuovo = { alice: [...strategia.alice], bob: [...strategia.bob] };
-      nuovo[chi][k] = { ...r, [campo]: valore };
-      onChange(nuovo);
-    };
-    const fissa = r.modo === "si" || r.modo === "no";
-    return (
-      <tr key={`${chi}${k}`}>
-        <td className="py-1 pr-3 text-xs">{etichetta}</td>
-        <td className="pr-2">
-          <select
-            value={r.modo}
-            onChange={(e) => cambia("modo", e.target.value)}
-            className="rounded border border-gray-400 bg-transparent px-1 py-0.5 text-xs dark:bg-gray-900"
-          >
-            {MODI.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.testo}
-              </option>
-            ))}
-          </select>
-        </td>
-        <td>
-          <select
-            value={r.d}
-            disabled={fissa}
-            onChange={(e) => cambia("d", Number(e.target.value))}
-            className="rounded border border-gray-400 bg-transparent px-1 py-0.5 text-xs disabled:opacity-40 dark:bg-gray-900"
-          >
-            {QUESTIONS.map((q, i) => (
-              <option key={q.id} value={i}>
-                {q.id} · {q.label}
-              </option>
-            ))}
-          </select>
-        </td>
-      </tr>
-    );
-  };
-  return (
-    <table>
-      <tbody>
-        {riga("alice", 0, "Alice, calice")}
-        {riga("alice", 1, "Alice, bottiglia")}
-        {riga("bob", 0, "Bob, calice")}
-        {riga("bob", 1, "Bob, bottiglia")}
-      </tbody>
-    </table>
-  );
-}
-
 function Punteggio({ titolo, v, n, teoria, colore }) {
   return (
     <div className="flex items-end justify-between rounded-lg border border-gray-300 p-4 dark:border-gray-700">
@@ -512,8 +390,8 @@ function Griglia({ ultimo }) {
           const isB = ultimo && ultimo.j === idx;
           let fill = "transparent";
           if (idx === MODEL_EXCLUDED_INDEX) fill = "rgba(127,127,127,0.25)";
-          if (isA) fill = "#0e7490";
-          if (isB) fill = "#be185d";
+          if (isA) fill = "#be123c";
+          if (isB) fill = "#0369a1";
           return (
             <g key={idx}>
               <polygon
@@ -538,16 +416,21 @@ function Griglia({ ultimo }) {
           );
         })}
       </svg>
-      <p className="mt-1 text-xs">
-        <span className="text-cyan-700">■ Alice</span> ·{" "}
-        <span className="text-pink-700">■ Bob</span>
-        {ultimo ? ` · domande ${ultimo.x + 1} e ${ultimo.y + 1}` : ""}
-      </p>
+      <div className="mt-1 flex items-center justify-center gap-4 text-xs">
+        <span className="inline-flex items-center gap-1 font-semibold text-rose-700 dark:text-rose-300">
+          ■ Alice
+          {ultimo && <Vino formato={ultimo.x === 0 ? "calice" : "bottiglia"} colore={ultimo.classica.a ? "R" : "B"} dimensione={36} />}
+        </span>
+        <span className="inline-flex items-center gap-1 font-semibold text-sky-700 dark:text-sky-300">
+          ■ Bob
+          {ultimo && <Vino formato={ultimo.y === 0 ? "calice" : "bottiglia"} colore={ultimo.classica.b ? "R" : "B"} dimensione={36} />}
+        </span>
+      </div>
     </div>
   );
 }
 
-function Grafico({ c, q }) {
+function Grafico({ b, c, q }) {
   const W = 640;
   const H = 200;
   const m = { l: 44, r: 12, t: 10, b: 20 };
@@ -566,7 +449,7 @@ function Grafico({ c, q }) {
       viewBox={`0 0 ${W} ${H}`}
       className="w-full"
       role="img"
-      aria-label="Andamento delle cene offerte"
+      aria-label="Percentuali cumulative di cene offerte: sempre rosso in grigio, piano ottimizzato in arancione, stregato in viola"
     >
       {[0.3, 0.5, 0.7, 0.9].map((t) => (
         <g key={t}>
@@ -624,6 +507,7 @@ function Grafico({ c, q }) {
       >
         limite quantistico 85,4%
       </text>
+      <polyline points={linea(b)} fill="none" stroke="#64748b" strokeWidth="2" />
       <polyline
         points={linea(c)}
         fill="none"
@@ -640,53 +524,26 @@ function Grafico({ c, q }) {
   );
 }
 
-function Log({ log }) {
-  if (!log.length)
-    return (
-      <p className="text-gray-500">Premi Avvia o aggiungi qualche cena.</p>
-    );
-  const sn = (v) => (v ? "rosso" : "bianco");
-  const esito = (r) => (
-    <span
-      className={
-        r.vinto
-          ? "text-green-700 dark:text-green-400"
-          : "text-red-700 dark:text-red-400"
-      }
-    >
-      {sn(r.a)} · {sn(r.b)} {r.vinto ? "✔" : "✘"}
-    </span>
-  );
-  return (
-    <div className="overflow-x-auto">
-      <table className="w-full whitespace-nowrap text-sm">
-        <thead>
-          <tr className="text-left text-xs text-gray-500">
-            <th className="py-1">Numeri (Alice · Bob)</th>
-            <th>Formati</th>
-            <th>Normale</th>
-            <th>Stregato</th>
-          </tr>
-        </thead>
-        <tbody>
-          {log.map((r, k) => (
-            <tr
-              key={k}
-              className="border-t border-gray-200 dark:border-gray-800"
-            >
-              <td className="py-1 tabular-nums">
-                {MODEL_VALUES[r.i]} · {MODEL_VALUES[r.j]}
-              </td>
-              <td>
-                {r.x === 0 ? "calice" : "bottiglia"} · {r.y === 0 ? "calice" : "bottiglia"}{" "}
-                {r.x & r.y ? "(devono differire)" : "(devono coincidere)"}
-              </td>
-              <td>{esito(r.classica)}</td>
-              <td>{esito(r.quantistica)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+function TabellaQuattro({titolo,strategia,esempio}){
+ const righe=[[0,0],[0,1],[1,0],[1,1]].map(([x,y])=>{
+  const a=rispondi(MODEL_VALUES[esempio.i],strategia.alice[x]),b=rispondi(MODEL_VALUES[esempio.j],strategia.bob[y]);
+  return {x,y,a,b,ok:vince(x,y,a,b)};
+ });
+ return <div className="overflow-x-auto rounded-lg border border-gray-200 p-3 dark:border-gray-700">
+  <table className="w-full text-left text-xs">
+   <caption className="mb-3 text-left text-sm font-semibold">{titolo}</caption>
+   <thead><tr>
+    <th scope="col" className="p-2"><span className="inline-flex whitespace-nowrap rounded-md border-2 border-rose-500 px-2 py-1 font-bold text-rose-700 dark:text-rose-300">Alice · {MODEL_VALUES[esempio.i]}</span></th>
+    <th scope="col" className="p-2"><span className="inline-flex whitespace-nowrap rounded-md border-2 border-sky-500 px-2 py-1 font-bold text-sky-700 dark:text-sky-300">Bob · {MODEL_VALUES[esempio.j]}</span></th>
+    <th scope="col" className="p-2">Cena</th>
+   </tr></thead>
+   <tbody>{righe.map(r=>{
+    return <tr key={r.x+':'+r.y} className={esempio.x===r.x&&esempio.y===r.y?'border-t border-gray-200 bg-amber-100 dark:border-gray-700 dark:bg-amber-950/60':'border-t border-gray-200 dark:border-gray-700'}>
+     <td className="p-2"><Vino formato={r.x?"bottiglia":"calice"} colore={r.a?"R":"B"} dimensione={40}/></td>
+     <td className="p-2"><Vino formato={r.y?"bottiglia":"calice"} colore={r.b?"R":"B"} dimensione={40}/></td>
+     <td className="p-2"><span className={r.ok?'inline-flex items-center gap-1 whitespace-nowrap rounded border border-emerald-600 bg-emerald-50 px-2 py-1 font-bold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300':'inline-flex items-center gap-1 whitespace-nowrap rounded border border-red-600 bg-red-50 px-2 py-1 font-bold text-red-800 dark:bg-red-950 dark:text-red-300'}><span aria-hidden="true">{r.ok?'✓':'✗'}</span>{r.ok?'Offerta':'Si paga'}</span></td>
+    </tr>;
+   })}</tbody>
+  </table><p className="mt-2 text-xs font-semibold">{righe.filter(r=>r.ok).length} casi vincenti su 4.</p>
+ </div>;
 }

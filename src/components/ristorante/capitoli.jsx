@@ -2010,81 +2010,99 @@ export const CAPITOLI = [
     titolo: "La sala a nido d'ape",
     immagine: "/r04/7-alveare.svg",
     alt: "Una sala con 37 tavoli esagonali numerati da 1 a 9; Alice e Bob ai lati.",
-    domanda: "Una sala più ingegnosa può imitare quella stregata?",
+    domanda: "Sfruttando al meglio i numeri dei tavoli, si può superare il 75%?",
     Testo: () => (
       <>
         <P>
-          Rinunciato agli imbrogli, il proprietario prova un'altra strada:
-          rifà la sala del ristorante normale. Ci sono 37 tavoli esagonali
-          incastrati a nido d'ape, ognuno con un numero da 1 a 9, e il maître
-          fa sedere <A /> e <B /> con regole precise: a volte su tavoli
-          allineati, a volte su due tavoli con lo stesso numero. L'idea del
-          proprietario è ingegnosa: invece di un piano fisso, ogni sera <A /> e{" "}
-          <B /> trovano al tavolo due indizi legati fra loro, scelti dal
-          ristorante. Con il numero del tavolo e il formato servito, ciascuno
-          decide il colore.
+          Rinunciando agli imbrogli, il proprietario tenta di battere il 75%
+          con una sala più ingegnosa. Questa volta Alice e Bob non scelgono
+          il colore del vino: lo chef decide quale vino servire a ciascuno,
+          rosso o bianco, in base al numero del tavolo occupato e al formato
+          scelto dal cameriere, calice o bottiglia.
         </P>
         <P>
-          Il risultato non cambia: la sfida dello chef si ferma a tre cene su
-          quattro. I numeri dei tavoli sono decisi prima che i camerieri
-          scelgano il formato, quindi sono soltanto un accordo più elaborato,
-          preparato dal ristorante invece che da <A /> e <B />, e la prova del
-          capitolo 3 vale anche per loro. Le regole di posto cambiano quali
-          tavoli si confrontano, non il limite. Il ristorante normale resta
-          normale.
+          Il proprietario dispone 37 tavoli esagonali a nido d&apos;ape.
+          Quello centrale resta fuori gioco; gli altri 36 sono numerati
+          da 1 a 9. I numeri sono equidistribuiti: ciascuno compare quattro
+          volte. Su ogni linea definita dalla griglia i numeri sono tutti
+          diversi; quelli uguali ricompaiono su tavoli che non hanno mai
+          una linea comune.
+          Il maître prova tre assegnazioni di tavoli per <A /> e <B />.
+          Il proprietario vuole scoprire quale delle tre
+          assegnazioni permetta di ottenere più cene offerte:
         </P>
+        <ul className="ml-5 list-disc space-y-2 leading-relaxed">
+          <li><strong>Stessa linea:</strong> i due numeri sono diversi.</li>
+          <li><strong>Nessuna linea comune, numeri diversi:</strong> manca
+          sia l&apos;allineamento sia l&apos;uguaglianza.</li>
+          <li><strong>Gemelli:</strong> stesso numero, nessuna linea comune.</li>
+        </ul>
+        <P>
+          Il proprietario fornisce allo chef una speciale calcolatrice.
+          Per ciascun tipo di assegnazione, la calcolatrice valuta diversi modi
+          di associare numero e formato al colore del vino. Per esempio:
+          «con il calice, rosso per i numeri pari e bianco per i dispari».
+          Prima che i camerieri scelgano i formati, calcola la probabilità
+          di vincere la sfida per ogni piano esaminato
+          e indica allo chef quello con la probabilità più alta. Può scegliere
+          anche un colore fisso, se i numeri non migliorano il risultato.
+        </P>
+        <P>
+          Poi, in ciascuna sala, il cameriere sceglie a caso calice o
+          bottiglia, con uguale probabilità. Le due scelte sono indipendenti
+          fra loro, dai numeri dei tavoli e dal piano: ciascuna delle quattro
+          coppie di formati ha quindi probabilità di un quarto.
+        </P>
+        <aside aria-label="Il risultato centrale" className="space-y-3 rounded-lg border border-amber-300 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-950/30">
+          <h3 className="font-semibold">Anche il miglior tentativo si ferma a tre cene su quattro.</h3>
+          <P>
+            Il piano della calcolatrice è buono tanto quanto “Sempre rosso”:
+            entrambi vincono mediamente 3 volte su 4. Anche con i gemelli,
+            la perfetta coincidenza dei numeri non permette di superarlo.
+            Il riferimento stregato arriva invece a circa <strong>85,4%</strong>,
+            senza usare i numeri e senza comunicazione fra le due sale.
+          </P>
+          <P>
+            Sono probabilità attese: su 200 cene le percentuali osservate
+            possono oscillare. Il limite riguarda la probabilità di successo,
+            non il risultato di ogni breve sequenza.
+          </P>
+        </aside>
         <details className="group rounded-lg border border-sky-200 bg-sky-50/60 p-4 dark:border-sky-900 dark:bg-sky-950/30">
           <summary className="cursor-pointer text-sm font-semibold uppercase tracking-wide text-sky-900 dark:text-sky-200">
             Il parallelo con la fisica
           </summary>
           <div className="mt-3 space-y-3">
             <P>
-              I numeri dei tavoli rappresentano <strong>variabili nascoste
-              locali correlate</strong>: due informazioni preparate prima
-              delle misure e distribuite ai due laboratori. Possono avere una
-              causa comune, come l&apos;assegnazione del maître. Se i tavoli
-              sono gemelli, i due numeri coincidono: questa correlazione non
-              richiede alcun messaggio durante la cena.
+              I numeri sono <strong>variabili nascoste locali correlate</strong>:
+              informazioni distribuite prima della scelta delle misure.
+              «Locali» non significa indipendenti fra loro: i due numeri
+              possono essere legati, anche uguali. Lo chef applica però
+              una regola separata per ciascuna sala: il colore servito
+              dipende soltanto dal numero e dal formato di quel cliente.
             </P>
             <P>
-              <strong>Locale non significa indipendente.</strong> Gli indizi
-              possono essere correlati fra loro; ciò che conta è che la
-              risposta di Alice usi soltanto il suo indizio e il suo formato,
-              e quella di Bob soltanto i propri. Il formato corrisponde alla
-              scelta della misura, il colore al suo risultato. Nessuno usa
-              il formato scelto nell&apos;altra sala.
-            </P>
-            <P>
-              Per applicare il limite occorre anche che le scelte dei
-              camerieri siano indipendenti dagli indizi e dagli accordi:
-              essere preparati prima, da solo, non basta. Con questa ipotesi,
-              per ogni assegnazione dei numeri esiste ancora un piano di
-              risposte ai due possibili formati. Mescolare tanti piani,
-              anche con indizi perfettamente correlati, non permette di
-              superare il <strong>75% di cene offerte</strong> in media.
-            </P>
-            <P>
-              Il <TeoremaBell /> ammette già queste correlazioni dovute a
-              una preparazione comune. Il ristorante stregato non si spiega
-              quindi aggiungendo soltanto indizi locali più elaborati:
-              il riferimento quantistico raggiunge circa l&apos;85,4%, con
-              le stesse scelte indipendenti dei formati.
+              Con scelte delle misure indipendenti dalla preparazione e senza
+              comunicazione, il <TeoremaBell /> limita già tutti questi piani,
+              anche oltre la famiglia esplorata dalla calcolatrice. Nella sfida
+              CHSH il massimo classico è il 75% (S = 2); il riferimento
+              quantistico raggiunge circa l&apos;85,4% (S = 2√2 ≈ 2,83).
+              Aggiungere informazioni condivise più elaborate non colma
+              questa differenza.
             </P>
           </div>
         </details>
       </>
     ),
     lezione:
-      "Senza imbrogli, nessuna disposizione dei tavoli porta un ristorante normale oltre il 75%.",
+      "Nelle condizioni della sfida, neppure numeri perfettamente uguali permettono di superare il 75%: il miglior piano del proprietario non batte «Sempre rosso».",
     Sim: SalaAlveare,
     guida: {
-      cosa: "La sfida dello chef nella sala a nido d'ape: il maître assegna due tavoli con numeri correlati, poi i camerieri scelgono indipendentemente calice o bottiglia. Nel ristorante normale ciascuno sceglie rosso o bianco usando solo il proprio numero e il proprio formato.",
-      avvio:
-        "Scegli l'assegnazione dei tavoli («Casuale», «Collineare», «Gemello»). Per Alice e Bob imposta separatamente la regola con calice e con bottiglia: «regola sul numero», «regola invertita», «sempre rosso» o «sempre bianco». Puoi anche provare «Sempre rosso (75%)». Poi premi «▶ Avvia», «+1 cena» o «+100».",
-      leggere:
-        "Confronta le cene offerte nel ristorante normale e nel riferimento stregato, poi il registro «Ultime cene»: mostra numeri dei tavoli, formati e colori. La tabella «Il massimo per ogni sistema» distingue le sole regole sul numero da qualunque strategia classica ammessa.",
-      mostra:
-        "Gli indizi correlati distribuiti dalla sala non permettono di superare il 75%: sono ancora informazioni preparate prima della scelta dei formati. Una particolare regola può fare peggio del 75%; il riferimento stregato ha invece una probabilità di successo dell'85,4%. Le frequenze osservate su poche cene possono oscillare.",
+      cosa: "Il proprietario mette alla prova il piano più vantaggioso per ciascuna disposizione dei tavoli. Riuscirà a ottenere più cene offerte di «Sempre rosso» e ad avvicinarsi al ristorante stregato?",
+      avvio: "Scegli soltanto l’assegnazione dei tavoli. Leggi le regole del piano ottimizzato, poi premi «+1 cena», «▶ Avvia» o «Completa 200 cene». L’esperimento si ferma a 200 cene per ciascun confronto. Cambiare assegnazione ricalcola il piano e azzera i conteggi.",
+      leggere: "Confronta i tre riquadri: sempre rosso, piano ottimizzato, riferimento stregato. Le due tabelline mantengono i numeri dell’ultima cena (una coppia di esempio prima dell’avvio) e mostrano i vini che i due piani servirebbero per ciascuna coppia di formati. Lo sfondo giallino indica i formati effettivamente estratti nell’ultima cena. La tabella confronta i valori esatti di «Sempre rosso», del piano dalla calcolatrice e del riferimento stregato per tutte le assegnazioni.",
+      mostra: "La calcolatrice valuta 65.536 combinazioni di regole basate su proprietà dei numeri e colori fissi. Il miglior piano ammesso raggiunge il 75%, come sempre rosso; nessun piano locale può superare quel limite nelle condizioni della sfida. Nei gemelli, a parità di successo, viene preferito il piano basato sui numeri. Il riferimento stregato resta all’85,4% atteso. Su 200 cene le frequenze osservate possono differire anche fra piani con la stessa probabilità.",
+
     },
   },
   {
