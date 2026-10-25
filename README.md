@@ -28,6 +28,6 @@ Le simulazioni riproducono statistiche matematiche: non costituiscono un esperim
 ## Terrazza — modello delle ordinazioni
 
 Il capitolo 9, «Insieme in terrazza», usa `sim/SimTerrazza.jsx` e `logica/terrazza.js`.
-I piatti sono estratti indipendentemente; colore e formato dipendono da entrambi i piatti. Una probabilità comune descrive quanto ciascuno mantiene la propria preferenza: 75%, 80%, 85%, 90%, 95% producono rispettivamente S medio = 1; 1,44; 1,96; 2,56; 3,24. Il valore iniziale è 80%, senza selezionare un S obiettivo. Nessun dato sperimentale sui venti è trasferito al nuovo modello. Il valore può cambiare liberamente con i cursori, da 0 a 4; la comunicazione rende inapplicabile il limite delle sale isolate.
+I piatti sono estratti indipendentemente; colore e formato dipendono da entrambi i piatti. Alice e Bob seguono sempre le proprie regole. Il cameriere inverte il formato richiesto con probabilità 20%, mantenendo il colore: il registro del servizio ha S atteso = 2,4. Senza errori S sarebbe 4. Il modello è narrativo, con parametri fissi e decisioni che conoscono entrambi i piatti; non usa dati sperimentali sui venti.
 
 La versione precedente è salvata in `backups/terrazza-dei-venti-20261025-113910`; il simulatore R59 rimane intatto nell’archivio.

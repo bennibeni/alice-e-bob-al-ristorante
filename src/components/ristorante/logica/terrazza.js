@@ -1,9 +1,9 @@
 // Modello narrativo classico: entrambe le decisioni conoscono entrambi i piatti.
 export const CENE = [
-  { id: 'AB', alice: 'Risotto ai funghi', bob: 'Pesce al forno', rosso: true, bottiglia: false, motivo: 'Piatti diversi: calici separati. Alice sceglie il rosso per i funghi.' },
+  { id: 'AB', alice: 'Risotto ai funghi', bob: 'Frittura di pesce', rosso: true, bottiglia: false, motivo: 'Piatti diversi: due calici. Alice sceglie rosso perché non mangiano entrambi pesce.' },
   { id: 'AB′', alice: 'Risotto ai funghi', bob: 'Arrosto', rosso: true, bottiglia: true, motivo: 'Due piatti intensi: rosso e una bottiglia da condividere.' },
-  { id: 'A′B', alice: 'Pesce al forno', bob: 'Pesce al forno', rosso: false, bottiglia: true, motivo: 'Due piatti delicati: bianco e una bottiglia da condividere.' },
-  { id: 'A′B′', alice: 'Pesce al forno', bob: 'Arrosto', rosso: true, bottiglia: false, motivo: 'Calici separati per i due piatti diversi. Alice sceglie rosso per accompagnare gli assaggi dell’arrosto di Bob.' },
+  { id: 'A′B', alice: 'Pesce al forno', bob: 'Frittura di pesce', rosso: false, bottiglia: true, motivo: 'Entrambi mangiano pesce: bianco e una bottiglia da condividere.' },
+  { id: 'A′B′', alice: 'Pesce al forno', bob: 'Arrosto', rosso: true, bottiglia: false, motivo: 'Piatti diversi: due calici. Alice sceglie rosso perché non mangiano entrambi pesce.' },
 ];
 
 export function correlatori(pVino, pFormato) {

@@ -1,79 +1,131 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Info, X } from 'lucide-react';
+import { Button, Dialog, DialogTrigger, Heading, Modal, ModalOverlay } from 'react-aria-components';
+import { Vino, useIntervallo } from './ui';
 import { CENE, cenaTerrazza, correlatori, valoreS } from '../logica/terrazza';
 
-const vuoto = () => ({ n: [0, 0, 0, 0], somme: [0, 0, 0, 0], ultima: null });
+const vuoto = () => ({ n: [0, 0, 0, 0], somme: [0, 0, 0, 0], ultime: [null, null, null, null], ultima: null });
 const f = n => n.toLocaleString('it-IT', { maximumFractionDigits: 3, minimumFractionDigits: 2 });
 const button = 'rounded border border-zinc-400 px-3 py-2 hover:bg-black/5 dark:hover:bg-white/10';
 
+function InfoCorrelatore({ osservato = false }) {
+  const titolo = osservato ? 'E osservato sul servizio' : 'E atteso';
+  return <DialogTrigger>
+    <Button aria-label={`Spiegazione di ${titolo}`} className="ml-1 inline-flex rounded-full align-middle text-sky-700 outline-none hover:text-sky-900 focus-visible:ring-2 focus-visible:ring-sky-500 dark:text-sky-300"><Info aria-hidden="true" className="h-4 w-4" /></Button>
+    <ModalOverlay isDismissable className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+      <Modal className="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-2xl border border-sky-200 bg-white p-6 text-left text-sm font-normal text-zinc-900 shadow-xl outline-none dark:border-sky-800 dark:bg-zinc-900 dark:text-zinc-100">
+        <Dialog className="outline-none">{({ close }) => <div className="space-y-4">
+          <div className="flex items-center justify-between gap-4"><Heading slot="title" className="text-xl font-semibold">{titolo}</Heading><Button onPress={close} aria-label="Chiudi spiegazione" className="rounded p-2 hover:bg-black/5 focus-visible:ring-2 focus-visible:ring-sky-500 dark:hover:bg-white/10"><X aria-hidden="true" className="h-5 w-5" /></Button></div>
+          <p><strong>E è una media calcolata separatamente per ciascuna coppia di piatti.</strong> A ogni cena assegniamo un numero al colore e uno al formato serviti, poi li moltiplichiamo.</p>
+          <table className="w-full border-collapse text-left"><caption className="mb-2 text-left">I prodotti possibili per una cena</caption><thead><tr><th className="border p-2">Vino</th><th className="border p-2">Due calici (+1)</th><th className="border p-2">Bottiglia (−1)</th></tr></thead><tbody><tr><th className="border p-2">Rosso (+1)</th><td className="border p-2">+1</td><td className="border p-2">−1</td></tr><tr><th className="border p-2">Bianco (−1)</th><td className="border p-2">−1</td><td className="border p-2">+1</td></tr></tbody></table>
+          {osservato ? <>
+            <p><strong>E osservato</strong> è la media dei prodotti delle cene già simulate per quella riga: sommiamo i +1 e i −1 e dividiamo per il numero di cene di quel menù.</p>
+            <p>Per esempio, se con risotto e frittura il cameriere serve rosso e due calici 8 volte e rosso in bottiglia 2 volte, E osservato = (8 − 2) / 10 = <strong>0,6</strong>.</p>
+            <p>Il cameriere non sbaglia necessariamente esattamente una volta ogni cinque cene. Il valore osservato può quindi differire da quello atteso, soprattutto con pochi servizi. Il trattino indica che per quel menù non è ancora stata simulata nessuna cena.</p>
+          </> : <>
+            <p><strong>E atteso</strong> è la media prevista dalle regole del modello, prima di simulare le cene. Considera l’80% di servizi corretti e il 20% di errori nel formato.</p>
+            <p>Con risotto e frittura l’ordine è rosso e due calici: prodotto +1. Se arriva una bottiglia il prodotto diventa −1. Quindi E atteso = 0,8 × (+1) + 0,2 × (−1) = <strong>0,6</strong>.</p>
+            <p>Con risotto e arrosto, invece, l’ordine è rosso in bottiglia: i segni si invertono ed E atteso è <strong>−0,6</strong>. Le quattro righe hanno valori attesi +0,6, −0,6, +0,6, +0,6.</p>
+          </>}
+          <p>E varia fra −1 e +1; non è una percentuale di vittorie. I quattro valori di E entrano nel calcolo di S.</p>
+          <Button onPress={close} className="rounded border border-zinc-400 px-3 py-2 hover:bg-black/5 dark:hover:bg-white/10">Chiudi</Button>
+        </div>}</Dialog>
+      </Modal>
+    </ModalOverlay>
+  </DialogTrigger>;
+}
+
+function Ordinazione({ rosso, bottiglia }) {
+  return <div className="flex min-w-24 items-center gap-1" aria-label={`${bottiglia ? 'Una bottiglia' : 'Due calici'} di vino ${rosso ? 'rosso' : 'bianco'}`}>
+    <Vino formato={bottiglia ? 'bottiglia' : 'calice'} colore={rosso ? 'R' : 'B'} dimensione={40} />
+    {!bottiglia && <Vino formato="calice" colore={rosso ? 'R' : 'B'} dimensione={40} />}
+    <span className="sr-only">{bottiglia ? 'Bottiglia' : 'Due calici'}, {rosso ? 'rosso' : 'bianco'}</span>
+  </div>;
+}
+
 export default function SimTerrazza() {
-  const [pVino, setVino] = useState(0.8);
-  const pFormato = pVino;
-  function cambiaPreferenza(p) { setVino(p); setRegistro(vuoto()); }
+  // Alice non cambia colore; il servizio inverte il formato nel 20% dei casi.
+  const pVino = 1;
+  const pFormato = 0.8;
   const [registro, setRegistro] = useState(vuoto);
+  const [inCorso, setInCorso] = useState(false);
   const e = correlatori(pVino, pFormato);
   const completo = registro.n.every(n => n > 0);
   const osservati = registro.n.map((n, i) => n ? registro.somme[i] / n : 0);
   const totale = registro.n.reduce((a, b) => a + b, 0);
+  useEffect(() => {
+    if (totale >= 200) setInCorso(false);
+  }, [totale]);
   function genera(numero) {
+    numero = Math.min(numero, 200 - totale);
+    if (numero <= 0) return;
     const cene = Array.from({ length: numero }, () => cenaTerrazza(Math.floor(Math.random() * 4), pVino, pFormato));
     setRegistro(prima => {
-      const prossimo = { n: [...prima.n], somme: [...prima.somme], ultima: prima.ultima };
+      const prossimo = { n: [...prima.n], somme: [...prima.somme], ultime: [...prima.ultime], ultima: prima.ultima };
       for (const cena of cene) {
         const i = cena.i;
         prossimo.n[i]++;
         prossimo.somme[i] += cena.prodotto;
         prossimo.ultima = cena;
+        prossimo.ultime[i] = cena;
       }
       return prossimo;
     });
   }
+  useIntervallo(() => genera(2), 100, inCorso);
   return <div className="space-y-5">
-    <label className="block rounded-lg bg-zinc-100 p-4 dark:bg-zinc-800">
-      <span className="block font-medium">Quanto sono abitudinari? Entrambi mantengono la propria preferenza nel {Math.round(pVino * 100)}% delle sere.</span>
-      <input className="mt-3 w-full" type="range" min="50" max="100" step="1" value={Math.round(pVino * 100)} onChange={event => cambiaPreferenza(Number(event.target.value) / 100)} />
-      <span className="text-sm">Su 100 sere, Alice sceglie il colore preferito circa {Math.round(pVino * 100)} volte; Bob sceglie il formato preferito altrettante volte. Nelle altre sere cambiano scelta. I cambiamenti dei due non devono avvenire nelle stesse sere.</span>
-    </label>
-    <div className="overflow-x-auto"><table className="w-full text-left text-sm">
-      <caption className="mb-2 text-left font-semibold">Prima l’ipotesi sulle abitudini, poi il risultato</caption>
-      <thead><tr><th className="border-b p-2">Preferenza mantenuta da ciascuno</th><th className="border-b p-2">S medio risultante</th><th className="border-b p-2">Esplora</th></tr></thead>
-      <tbody>{[0.5, 0.75, 0.8, 0.85, 0.9, 0.95, 1].map(p => <tr key={p} className={Math.abs(p-pVino) < 0.00001 ? 'bg-sky-50 dark:bg-sky-950/30' : ''}>
-        <td className="border-b p-2">{Math.round(p*100)}%{p === 0.75 ? ' · tre sere su quattro' : p === 0.8 ? ' · quattro sere su cinque' : p === 0.9 ? ' · nove sere su dieci' : p === 1 ? ' · sempre' : ''}</td>
-        <td className="border-b p-2">{f(valoreS(correlatori(p, p)))}</td>
-        <td className="border-b p-2"><button className={button} aria-pressed={Math.abs(p-pVino) < 0.00001} onClick={() => cambiaPreferenza(p)}>Prova {Math.round(p*100)}%</button></td>
-      </tr>)}</tbody>
-    </table></div>
-    <p className="text-sm">Ogni piatto è scelto casualmente con probabilità ½, indipendentemente da quello dell’altro. Le scelte possono avvenire in momenti diversi. Prima di ordinare da bere, entrambi conoscono tutti e due i piatti. Cambiare l’ipotesi sulle abitudini azzera il registro.</p>
+    <p className="text-sm">Alice e Bob seguono sempre le proprie regole. Il cameriere porta il formato opposto a quello chiesto da Bob con probabilità 20% a ogni cena, indipendentemente dai piatti. Il colore scelto da Alice viene sempre rispettato. Il registro conta ciò che arriva al tavolo.</p>
+    <p className="text-sm">Ogni portata è scelta casualmente con probabilità ½ e indipendentemente da quella dell’altro. Prima di ordinare da bere, entrambi conoscono tutti e due i piatti.</p>
     <div className="grid gap-3 sm:grid-cols-3" aria-live="polite">
       <div className="rounded-lg border p-4"><p className="text-sm">S atteso dal modello</p><strong className="text-3xl">{f(valoreS(e))}</strong></div>
       <div className="rounded-lg border p-4"><p className="text-sm">S osservato</p><strong className="text-3xl">{completo ? f(valoreS(osservati)) : '—'}</strong><p className="text-xs">{completo ? 'Può oscillare, soprattutto con poche cene.' : 'Servono osservazioni per tutti e quattro i menù.'}</p></div>
-      <div className="rounded-lg border p-4"><p className="text-sm">Cene registrate</p><strong className="text-3xl">{totale.toLocaleString('it-IT')}</strong></div>
+      <div className="rounded-lg border p-4"><p className="text-sm">Cene registrate (massimo 200)</p><strong className="text-3xl">{totale.toLocaleString('it-IT')}</strong></div>
     </div>
     <div className="flex flex-wrap gap-2">
-      <button className={button} onClick={() => genera(1)}>+1 cena</button>
-      <button className={button} onClick={() => genera(200)}>+200 cene</button>
-      <button className={button} onClick={() => genera(10000)}>+10.000 cene</button>
-      <button className={button} onClick={() => setRegistro(vuoto())}>Azzera</button>
+      <button className={button} disabled={totale >= 200} aria-pressed={inCorso} onClick={() => setInCorso(v => !v)}>{inCorso ? "❚❚ Pausa" : "▶ Avvia"}</button>
+      <button className={button} disabled={inCorso || totale >= 200} onClick={() => genera(1)}>+1 cena</button>
+      <button className={button} onClick={() => { setInCorso(false); setRegistro(vuoto()); }}>Azzera</button>
     </div>
-    {registro.ultima && <p className="rounded-lg bg-amber-50 p-3 text-sm dark:bg-amber-950/30" aria-live="polite">Ultima cena: Alice mangia {CENE[registro.ultima.i].alice.toLowerCase()}, Bob {CENE[registro.ultima.i].bob.toLowerCase()}. Alice sceglie <strong>{registro.ultima.rosso ? 'rosso' : 'bianco'}</strong>; Bob <strong>{registro.ultima.bottiglia ? 'bottiglia' : 'calice'}</strong>.</p>}
+    {registro.ultima && <p className="rounded-lg bg-amber-50 p-3 text-sm dark:bg-amber-950/30" aria-live="polite">Ultima cena: Alice mangia {CENE[registro.ultima.i].alice.toLowerCase()}, Bob {CENE[registro.ultima.i].bob.toLowerCase()}. Vino servito per entrambi: <strong>{registro.ultima.rosso ? 'rosso' : 'bianco'}</strong>, <strong>{registro.ultima.bottiglia ? 'bottiglia' : 'due calici'}</strong>. {registro.ultima.bottiglia !== CENE[registro.ultima.i].bottiglia ? 'Il cameriere ha sbagliato formato.' : 'Il formato è quello richiesto da Bob.'}</p>}
     <div className="overflow-x-auto"><table className="w-full text-left text-sm">
-      <caption className="mb-2 text-left font-semibold">Le quattro cene e le preferenze del modello</caption>
-      <thead><tr>{['Situazione / piatti', 'Preferenza e motivo', 'Cene', 'E atteso', 'E osservato'].map(t => <th key={t} className="border-b p-2">{t}</th>)}</tr></thead>
-      <tbody>{CENE.map((c, i) => <tr key={c.id}>
-        <td className="border-b p-2"><strong>{c.id}</strong><br />Alice: {c.alice}<br />Bob: {c.bob}</td>
-        <td className="min-w-52 border-b p-2"><strong>{c.rosso ? 'Rosso' : 'Bianco'} · {c.bottiglia ? 'bottiglia' : 'calice'}</strong><br />{c.motivo}</td>
-        <td className="border-b p-2">{registro.n[i]}</td><td className="border-b p-2">{f(e[i])}</td><td className="border-b p-2">{registro.n[i] ? f(osservati[i]) : '—'}</td>
-      </tr>)}</tbody>
+      <caption className="mb-2 text-left font-semibold">Le quattro cene e le ordinazioni richieste</caption>
+      <thead><tr>{['Situazione / piatti', 'Ordinazione richiesta', 'Ultimo servizio per questo menù', 'Cene', 'E atteso', 'E osservato sul servizio'].map(t => <th key={t} className="border-b p-2">{t}{t === "E atteso" && <InfoCorrelatore />}{t === "E osservato sul servizio" && <InfoCorrelatore osservato />}</th>)}</tr></thead>
+      <tbody>{CENE.map((c, i) => {
+        const ultima = registro.ultime[i];
+        const attiva = registro.ultima?.i === i;
+        const errore = ultima && ultima.bottiglia !== c.bottiglia;
+        return <tr key={c.id} className={`transition-colors duration-300 ${attiva ? 'bg-amber-100 dark:bg-amber-950/60' : ''}`}>
+          <td className="min-w-48 border-b p-2"><strong>{c.id}</strong>
+            <div className="mt-2 rounded-md border-2 border-rose-500 px-2 py-1 text-rose-700 dark:text-rose-300">Alice · {c.alice}</div>
+            <div className="mt-1 rounded-md border-2 border-sky-500 px-2 py-1 text-sky-700 dark:text-sky-300">Bob · {c.bob}</div>
+          </td>
+          <td className="min-w-52 border-b p-2"><Ordinazione rosso={c.rosso} bottiglia={c.bottiglia} /><p className="mt-2 text-xs">{c.motivo}</p></td>
+          <td className="min-w-40 border-b p-2">{ultima ? <div key={registro.n[i]} className={attiva ? 'motion-safe:animate-[comparsa-cena_350ms_ease-out]' : ''}>
+            <Ordinazione rosso={ultima.rosso} bottiglia={ultima.bottiglia} />
+            <span className={`mt-2 inline-flex rounded border px-2 py-1 text-xs font-bold ${errore ? 'border-red-600 bg-red-50 text-red-800 dark:bg-red-950 dark:text-red-300' : 'border-emerald-600 bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'}`}>{errore ? '✗ Formato sbagliato' : '✓ Ordine rispettato'}</span>
+          </div> : <span className="text-xs text-zinc-500">In attesa della prima cena</span>}</td>
+          <td className="border-b p-2">{registro.n[i]}</td><td className="border-b p-2">{f(e[i])}</td><td className="border-b p-2">{registro.n[i] ? f(osservati[i]) : '—'}</td>
+        </tr>;
+      })}</tbody>
     </table></div>
+    <p className="text-xs text-zinc-600 dark:text-zinc-400">La riga gialla indica l’ultima cena. Rosa: piatto di Alice; azzurro: piatto di Bob. A destra dell’ordine richiesto resta visibile l’ultimo servizio di ciascun menù; verde e rosso segnalano se il formato è corretto, non una cena vinta o persa.</p>
+    <style>{`@keyframes comparsa-cena { from { opacity: 0.4; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }`}</style>
     <details className="rounded-lg border p-4"><summary className="cursor-pointer font-medium">Come si fanno i conti?</summary>
       <div className="mt-3 space-y-2 text-sm">
-        <p>Rosso = +1, bianco = −1; calice = +1, bottiglia = −1. E è la media del prodotto dei due numeri per ciascuna coppia di piatti. Non misura quanto sia buono il vino.</p>
+        <p>Rosso = +1, bianco = −1; due calici = +1, bottiglia = −1. E è la media del prodotto dei due numeri per ciascuna coppia di piatti. Non misura quanto sia buono il vino.</p>
         <p>S = |E(AB) − E(AB′) + E(A′B) + E(A′B′)|.</p>
-        <p>Le preferenze danno i segni +, −, +, +. Se Alice mantiene la propria preferenza con probabilità p e Bob con probabilità q, ogni correlatore ha modulo (2p − 1)(2q − 1). Quindi S atteso = 4(2p − 1)(2q − 1).</p>
-        <p>Qui usiamo la stessa probabilità per entrambi: p = q, quindi S medio = 4(2p − 1)². Con 80% emerge 1,44; con 90% emerge 2,56. Il superamento di 2 avviene oltre circa 85,36%. Le percentuali descrivono ipotesi sui personaggi, non dati raccolti su persone reali.</p>
+        <p>Le preferenze danno i segni +, −, +, +. Senza errori, i quattro correlatori sono +1, −1, +1, +1 e S = 4. Il cameriere inverte il formato nel 20% dei casi: ogni prodotto cambia segno in quelle cene. Ciascun correlatore è quindi moltiplicato per 0,8 − 0,2 = 0,6.</p>
+        <p>I correlatori medi del servizio sono +0,6, −0,6, +0,6, +0,6: S medio = 2,4. Un errore su cinque è una frequenza attesa, non un obbligo di sbagliare esattamente una volta ogni cinque cene. Le ipotesi sono narrative, non dati sperimentali.</p>
       </div>
     </details>
-    <p className="rounded-lg bg-sky-50 p-4 text-sm dark:bg-sky-950/30"><strong>Perché non è stregoneria?</strong> Quando Alice mangia pesce, la sua preferenza cambia guardando il piatto di Bob. Anche Bob valuta entrambi i piatti prima di scegliere il formato. Le decisioni dipendono dal menù completo: mancano le condizioni delle sale isolate. Il limite quantistico di circa 2,83 non si applica a questo modello.</p>
+    <aside className="space-y-3 rounded-lg bg-sky-50 p-4 text-sm dark:bg-sky-950/30">
+      <h4 className="font-semibold">Perché non è stregoneria?</h4>
+      <p>Nelle sale separate, ciascuno doveva rispondere conoscendo soltanto la propria domanda. È in quelle condizioni che il ristorante normale non poteva superare S = 2.</p>
+      <p>In terrazza Alice e Bob conoscono invece entrambi i piatti prima di ordinare il vino. La regola di Alice è sempre la stessa — bianco se entrambi mangiano pesce, altrimenti rosso — ma per applicarla deve sapere anche che cosa mangia Bob. Anche Bob deve conoscere entrambi i piatti per decidere fra bottiglia e calici. Una regola fissa può dunque usare informazioni che nelle sale separate non erano disponibili.</p>
+      <p>Con queste regole, un servizio senza errori darebbe S = 4. Gli errori di formato del cameriere, una volta su cinque in media, riducono il valore atteso a 2,4. Non creano il superamento di 2: lo attenuano.</p>
+      <p><strong>La conclusione:</strong> il ristorante normale può ottenere S = 2,4 quando si decide conoscendo entrambi i piatti. Il risultato sorprendente del ristorante stregato è superare 2 anche con le sale separate, senza comunicare le domande prima delle risposte. Per confrontare i due ristoranti bisogna confrontare anche le informazioni disponibili, non soltanto il valore di S.</p>
+    </aside>
   </div>;
 }

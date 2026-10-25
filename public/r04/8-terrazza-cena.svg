@@ -1,11 +1,32 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-labelledby="title">
-<title id="title">Alice e Bob cenano insieme in terrazza</title>
+<title id="title">Alice e Bob in terrazza e il cameriere che guarda Alice</title>
 <rect width="800" height="450" fill="#e0f2fe"/><circle cx="680" cy="80" r="35" fill="#fde68a"/>
 <path d="M0 260 Q120 180 250 260 T500 250 T800 260 V450 H0" fill="#a7c7bb"/>
 <path d="M0 330 H800 V450 H0" fill="#d6c5b1"/><path d="M0 300 H800 M40 300 V360 M130 300 V360 M670 300 V360 M760 300 V360" stroke="#64748b" stroke-width="8"/>
 <path d="M35 30 Q400 120 765 30" fill="none" stroke="#475569" stroke-width="3"/>
 <g fill="#fef3c7" stroke="#d97706"><circle cx="120" cy="48" r="8"/><circle cx="260" cy="74" r="8"/><circle cx="400" cy="80" r="8"/><circle cx="540" cy="74" r="8"/><circle cx="680" cy="48" r="8"/></g>
-<text x="400" y="135" text-anchor="middle" font-family="Arial,sans-serif" font-size="25" fill="#164e63">«Questa sera scegliamo insieme.»</text>
+<!-- Il cameriere è rivolto verso Alice, seduta alla sua destra. -->
+<g stroke="#44382e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M110 315 L106 405 L121 405 L133 330 L143 405 L158 405 L155 315" fill="#334155"/>
+  <path d="M100 235 Q125 213 151 232 L163 318 Q133 333 101 316 Z" fill="#fff"/>
+  <path d="M113 230 L130 255 L141 228 L149 317 L113 318 Z" fill="#334155"/>
+  <path d="M122 232 L131 237 L140 232 L140 246 L131 241 L122 246 Z" fill="#9f1239"/>
+  <path d="M105 246 L85 283 L61 273" fill="none" stroke="#fff" stroke-width="17"/>
+  <path d="M150 248 L177 273 L193 258" fill="none" stroke="#fff" stroke-width="16"/>
+  <ellipse cx="195" cy="255" rx="8" ry="10" fill="#f6c9a8"/>
+  <ellipse cx="58" cy="271" rx="9" ry="7" fill="#f6c9a8"/>
+  <path d="M31 259 H83" fill="none" stroke="#64748b" stroke-width="5"/>
+  <path d="M48 256 V241 Q58 231 68 241 V256" fill="#f8fafc"/>
+  <path d="M120 216 L120 227 Q131 236 142 225 L142 209" fill="#f6c9a8"/>
+  <path d="M108 180 Q105 151 133 149 Q159 149 159 176 L167 188 L157 193 Q159 215 140 221 Q114 221 109 199 Z" fill="#f6c9a8"/>
+  <path d="M108 187 Q97 161 116 149 Q142 133 158 159 L157 173 Q143 157 121 171 L118 190 Z" fill="#475569"/>
+  <ellipse cx="139" cy="183" rx="6" ry="7" fill="#fff" stroke-width="1.5"/>
+  <ellipse cx="154" cy="182" rx="4" ry="6" fill="#fff" stroke-width="1.5"/>
+  <circle cx="142" cy="186" r="2.5" fill="#292524" stroke="none"/>
+  <circle cx="156" cy="185" r="2" fill="#292524" stroke="none"/>
+  <path d="M133 173 Q139 169 145 173 M150 172 L156 172" fill="none" stroke-width="2"/>
+  <path d="M142 205 Q150 208 155 201" fill="none" stroke-width="2"/>
+</g>
 <g stroke="#44382e" stroke-width="3"><path d="M210 330 V260 Q250 225 290 260 V330" fill="#fb7185"/><circle cx="250" cy="215" r="31" fill="#f6c9a8"/><path d="M218 213 Q214 170 252 177 Q285 177 282 218 L269 199 Q240 211 218 213" fill="#78350f"/>
 <path d="M510 330 V260 Q550 225 590 260 V330" fill="#60a5fa"/><circle cx="550" cy="215" r="31" fill="#f6c9a8"/><path d="M518 204 Q525 167 557 179 Q579 183 581 205" fill="#334155"/>
 <ellipse cx="400" cy="330" rx="205" ry="60" fill="#fff7ed"/><path d="M300 370 L285 440 M500 370 L515 440" stroke-width="12"/>

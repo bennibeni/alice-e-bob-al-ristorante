@@ -3,7 +3,7 @@ import { cenaTerrazza, correlatori, valoreS } from './terrazza';
 
 describe('decisioni in terrazza', () => {
   it('calcola le medie enumerando le decisioni e le loro probabilità', () => {
-    const p = 0.9, q = 0.85;
+    const p = 1, q = 0.8;
     const esatti = [0, 1, 2, 3].map(i => {
       let media = 0;
       for (const segueAlice of [true, false]) for (const segueBob of [true, false]) {
@@ -14,7 +14,7 @@ describe('decisioni in terrazza', () => {
       return media;
     });
     esatti.forEach((e, i) => expect(e).toBeCloseTo(correlatori(p, q)[i]));
-    expect(valoreS(esatti)).toBeCloseTo(2.24);
+    expect(valoreS(esatti)).toBeCloseTo(2.4);
   });
   it('include scelte casuali e scelte senza esitazioni senza imporre un intervallo di S', () => {
     expect(valoreS(correlatori(0.5, 0.85))).toBe(0);
