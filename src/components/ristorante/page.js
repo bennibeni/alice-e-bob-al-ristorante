@@ -146,8 +146,7 @@ export default function Page() {
               {capitolo.guida && <Guida guida={capitolo.guida} />}
               <Sim key={capitolo.id} />
               <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                Il programma simula le statistiche quantistiche; non realizza un
-                esperimento fisico con due sistemi isolati.
+                {capitolo.avvertenzaSim || "Il programma simula le statistiche quantistiche; non realizza un esperimento fisico con due sistemi isolati."}
               </p>
             </section>
           )}

@@ -24,3 +24,10 @@ Dipendenze già installate. Su un altro computer: `npm ci`. Per produzione: `npm
 I capitoli sono raggiungibili tramite hash, per esempio `/#sfida`, `/#alveare` e `/#terrazza`. Le dipendenze archiviate sono copie locali: la nuova applicazione non richiede il progetto Next14. I sorgenti originali non sono stati modificati.
 
 Le simulazioni riproducono statistiche matematiche: non costituiscono un esperimento fisico fra sistemi isolati. Le fonti e le attribuzioni originali sono conservate nei capitoli e negli approfondimenti.
+
+## Terrazza — modello delle ordinazioni
+
+Il capitolo 9, «Insieme in terrazza», usa `sim/SimTerrazza.jsx` e `logica/terrazza.js`.
+I piatti sono estratti indipendentemente; colore e formato dipendono da entrambi i piatti. Una probabilità comune descrive quanto ciascuno mantiene la propria preferenza: 75%, 80%, 85%, 90%, 95% producono rispettivamente S medio = 1; 1,44; 1,96; 2,56; 3,24. Il valore iniziale è 80%, senza selezionare un S obiettivo. Nessun dato sperimentale sui venti è trasferito al nuovo modello. Il valore può cambiare liberamente con i cursori, da 0 a 4; la comunicazione rende inapplicabile il limite delle sale isolate.
+
+La versione precedente è salvata in `backups/terrazza-dei-venti-20261025-113910`; il simulatore R59 rimane intatto nell’archivio.

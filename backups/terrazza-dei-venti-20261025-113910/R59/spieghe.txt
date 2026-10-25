@@ -1,0 +1,369 @@
+Ho ottenuto questo. Che significa? Numero partecipanti 8500 S simulato 2.466 N = 8500 S teorico 2.480 atteso dai dati pubblicati Violazione CHSH Sì criterio: S > 2
+
+Significa che il simulatore sta funzionando come previsto.
+
+S simulato = 2.466 vuol dire che, dopo aver generato casualmente le risposte secondo le probabilità del modello, il valore CHSH ottenuto è circa 2.466. Siccome la soglia classica è 2, il simulatore segnala correttamente “Violazione CHSH: Sì”.
+
+S teorico = 2.480 è il valore atteso dalle probabilità inserite nel componente. Il fatto che 2.466 sia molto vicino a 2.480 significa che con N = 8500 il campionamento casuale ha prodotto frequenze molto vicine a quelle teoriche. In altre parole, il rumore statistico è piccolo.
+
+La lettura giusta è questa:
+
+il tuo campionamento Monte Carlo sta riproducendo bene i dati impostati;
+quei dati sono di tipo Bell-violating, cioè danno 
+𝑆
+>
+2
+S>2;
+quindi il simulatore conferma numericamente quel pattern.
+
+C’è però un punto importante: il simulatore non sta scoprendo da zero la violazione. La violazione è già “incorporata” nelle probabilità che gli hai dato in input. Il simulatore serve a mostrarti che, estraendo molte risposte da quelle distribuzioni, il valore osservato tende al valore teorico.
+
+Quindi non significa direttamente:
+
+che i venti siano fisicamente entangled;
+né che il cervello “sia quantistico” in senso fisico.
+
+Significa invece una cosa più precisa: le statistiche di risposta del modello hanno la stessa struttura matematica di una violazione CHSH.
+
+Nel tuo componente, inoltre, N = 8500 significa 8500 estrazioni per ciascuno dei 4 contesti AB, AB', A'B, A'B'. Quindi stai facendo in totale 34000 scelte simulate. Per questo S simulato è così stabile e vicino a S teorico.
+
+Se provi con N = 85, vedrai oscillazioni più visibili: per esempio potresti ottenere 2.39, 2.52, 2.44, ecc. Con 8500, invece, il risultato converge vicino a 2.48.
+
+La sintesi più corta è: il tuo simulatore sta confermando che le probabilità che hai inserito producono una violazione CHSH robusta, e con 8500 campioni la stima è molto vicina al valore atteso.
+
+Posso anche spiegarti il significato di ciascuno dei quattro termini E(AB), E(AB'), E(A'B), E(A'B') dentro la formula di S.
+
+Quei quattro termini sono le quattro correlazioni medie dei quattro contesti sperimentali del test CHSH: AB, AB', A'B, A'B'. Nel paper, i quattro assi sono scelti così: A = Nord/Sud, B = Nord-Est/Sud-Ovest, A' = Est/Ovest, B' = Sud-Est/Nord-Ovest. Inoltre il valore finale usato è S = |E(A,B) - E(A,B') + E(A',B) + E(A',B')|.
+
+Come leggere E(AB).
+
+Per AB le quattro celle sono, nell’ordine:
+
+A1B1 = (N, NE)
+A1B2 = (N, SO)
+A2B1 = (S, NE)
+A2B2 = (S, SO)
+
+Nel test CHSH si assegna convenzionalmente il valore +1 agli esiti “allineati di segno” (++ e --) e -1 agli esiti misti (+- e -+). Per questo la correlazione si calcola come:
+
+E(AB) = p(A1,B1) - p(A1,B2) - p(A2,B1) + p(A2,B2)
+
+Quindi E(AB) è positivo se prevalgono le celle 1 e 4, negativo se prevalgono le celle 2 e 3. Nel paper, con le probabilità pubblicate, E(AB) = -0.60.
+
+Per il tuo caso questo significa: nel contesto AB, le risposte più frequenti tendono a cadere più spesso nelle combinazioni “miste” che in quelle “allineate”. Perciò la correlazione viene negativa.
+
+Lo stesso vale per E(AB').
+
+Qui le quattro celle sono:
+
+A1B'1 = (N, SE)
+A1B'2 = (N, NO)
+A2B'1 = (S, SE)
+A2B'2 = (S, NO)
+
+La formula è identica nella struttura:
+
+E(AB') = p(A1,B'1) - p(A1,B'2) - p(A2,B'1) + p(A2,B'2)
+
+Nel paper questo valore è +0.65, quindi qui prevalgono gli esiti con segno positivo rispetto a quelli con segno negativo.
+
+Per E(A'B):
+
+A'1B1 = (E, NE)
+A'1B2 = (E, SO)
+A'2B1 = (O, NE)
+A'2B2 = (O, SO)
+
+e
+
+E(A'B) = p(A'1,B1) - p(A'1,B2) - p(A'2,B1) + p(A'2,B2)
+
+Nel paper vale -0.60, quindi anche qui dominano di più le combinazioni “miste”.
+
+Per E(A'B'):
+
+A'1B'1 = (E, SE)
+A'1B'2 = (E, NO)
+A'2B'1 = (O, SE)
+A'2B'2 = (O, NO)
+
+e
+
+E(A'B') = p(A'1,B'1) - p(A'1,B'2) - p(A'2,B'1) + p(A'2,B'2)
+
+Nel paper vale -0.62.
+
+Il punto concettuale è questo: ciascun E(...) misura quanto, in quel contesto, le due scelte tendano a comportarsi come correlate positivamente o negativamente. Un valore vicino a +1 indica forte prevalenza di ++ e --; un valore vicino a -1 indica forte prevalenza di +- e -+; un valore vicino a 0 indica equilibrio quasi neutro.
+
+Poi CHSH non guarda i quattro E separatamente, ma la loro combinazione con segni:
+
+S = |E(AB) - E(AB') + E(A'B) + E(A'B')|
+
+Con i dati del paper si ottiene |S| = 2.47, cioè sopra il limite classico 2; il paper lo presenta come violazione CHSH nei dati cognitivi del compito “Two Different Wind Directions”.
+
+Nel tuo simulatore, quindi:
+
+ogni riga produce una correlazione E
+ogni E riassume la distribuzione delle 4 celle di quella riga
+S combina le quattro righe in un unico numero
+se S > 2, la struttura statistica è di tipo CHSH-violating rispetto a quel modello.
+
+Ogni riga ha quattro celle disposte da sinistra a destra.
+
+Cella 1
+corrisponde alla combinazione piu piu
+
+Cella 2
+corrisponde alla combinazione piu meno
+
+Cella 3
+corrisponde alla combinazione meno piu
+
+Cella 4
+corrisponde alla combinazione meno meno
+
+La correlazione E confronta in pratica due coppie di celle:
+
+coppia positiva
+cella 1 e cella 4
+
+contro
+
+coppia negativa
+cella 2 e cella 3
+
+Quindi, guardando una riga, puoi leggere il segno cosi:
+
+se prevalgono la cella 1 e la cella 4, allora E e positivo
+
+se prevalgono la cella 2 e la cella 3, allora E e negativo
+
+se le due coppie si bilanciano, allora E e vicino a zero
+
+Detto ancora piu visivamente:
+
+positivo significa che pesa di piu la diagonale esterna
+prima e quarta cella
+
+negativo significa che pesa di piu la diagonale interna
+seconda e terza cella
+
+quasi zero significa che nessuna delle due diagonali domina davvero
+
+Applichiamolo alle tue quattro righe.
+
+Riga AB
+
+Le probabilita sono:
+0.13, 0.55, 0.25, 0.07
+
+Somma della coppia positiva:
+0.13 piu 0.07 = 0.20
+
+Somma della coppia negativa:
+0.55 piu 0.25 = 0.80
+
+Quindi domina nettamente la coppia negativa.
+Per questo E di AB e negativo, precisamente meno 0.60.
+
+Riga AB'
+
+Le probabilita sono:
+0.47, 0.12, 0.06, 0.35
+
+Somma della coppia positiva:
+0.47 piu 0.35 = 0.82
+
+Somma della coppia negativa:
+0.12 piu 0.06 = 0.18
+
+Qui domina nettamente la coppia positiva.
+Per questo E di AB' e positivo, circa 0.64 o 0.65.
+
+Riga A'B
+
+Le probabilita sono:
+0.13, 0.38, 0.42, 0.07
+
+Somma della coppia positiva:
+0.13 piu 0.07 = 0.20
+
+Somma della coppia negativa:
+0.38 piu 0.42 = 0.80
+
+Di nuovo domina la coppia negativa.
+Per questo E di A'B e meno 0.60.
+
+Riga A'B'
+
+Le probabilita sono:
+0.09, 0.44, 0.38, 0.09
+
+Somma della coppia positiva:
+0.09 piu 0.09 = 0.18
+
+Somma della coppia negativa:
+0.44 piu 0.38 = 0.82
+
+Anche qui domina la coppia negativa.
+Per questo E di A'B' e circa meno 0.64 o meno 0.62.
+
+Questa lettura geometrica e molto utile perche ti permette di capire il segno di E quasi a colpo d’occhio, senza fare subito tutto il conto.
+
+Regola pratica finale:
+
+prima piu quarta contro seconda piu terza
+
+se vince prima piu quarta, E positivo
+se vince seconda piu terza, E negativo
+se sono quasi uguali, E vicino a zero
+
+E poi CHSH combina i quattro E con segni prefissati. Nel tuo caso:
+
+AB e negativo
+AB' e positivo
+A'B e negativo
+A'B' e negativo
+
+Questa particolare combinazione produce un valore finale S molto grande, sopra 2.
+
+Il punto chiave e che S non somma semplicemente i quattro E con lo stesso segno. La formula CHSH e:
+
+S = valore assoluto di
+E(AB) meno E(AB') piu E(A'B) piu E(A'B')
+
+Quindi AB' entra con un segno meno, mentre gli altri tre entrano con segno piu.
+
+Per capire se i contributi si cancellano o si sommano, non devi guardare solo il segno di ciascun E. Devi guardare il segno con cui entra dentro S.
+
+Nel tuo caso i valori sono circa questi:
+
+E(AB) = meno 0.60
+E(AB') = piu 0.65
+E(A'B) = meno 0.60
+E(A'B') = meno 0.62
+
+Ora sostituiamoli nella formula:
+
+S interno = meno 0.60 meno 0.65 piu meno 0.60 piu meno 0.62
+
+cioe
+
+S interno = meno 0.60 meno 0.65 meno 0.60 meno 0.62 = meno 2.47
+
+e poi si prende il valore assoluto, quindi S = 2.47. Questo e proprio il valore riportato nel paper.
+
+Quindi perche cresce invece di cancellarsi?
+
+Perche il termine E(AB') e positivo, ma nella formula viene sottratto. Sottrarre un numero positivo produce ancora un contributo negativo. In pratica:
+
+meno E(AB') = meno 0.65
+
+Percio tutti e quattro i contributi vanno nella stessa direzione:
+meno, meno, meno, meno
+
+Quando succede questo, i moduli si sommano quasi tutti, e S diventa grande.
+
+La regola generale e questa:
+
+per far crescere molto S, vuoi che
+E(AB), E(A'B), E(A'B') abbiano un certo segno
+e che E(AB') abbia il segno opposto
+
+Infatti il meno davanti a E(AB') ribalta il suo contributo, e allora anche lui si allinea agli altri tre invece di contrastarli.
+
+Visto ancora piu schematicamente:
+
+se hai
+
+E1 meno E2 piu E3 piu E4
+
+allora il modo migliore per far crescere il valore assoluto e:
+
+E1 negativo
+E2 positivo
+E3 negativo
+E4 negativo
+
+oppure, simmetricamente,
+
+E1 positivo
+E2 negativo
+E3 positivo
+E4 positivo
+
+In entrambi i casi, dopo aver applicato i segni della formula, i quattro pezzi puntano tutti dalla stessa parte.
+
+Faccio un controesempio, cosi si vede la cancellazione.
+
+Immagina di avere:
+
+E(AB) = meno 0.60
+E(AB') = meno 0.65
+E(A'B) = meno 0.60
+E(A'B') = meno 0.62
+
+Allora:
+
+S interno = meno 0.60 meno meno 0.65 piu meno 0.60 piu meno 0.62
+
+cioe
+
+S interno = meno 0.60 piu 0.65 meno 0.60 meno 0.62
+
+Qui il termine piu 0.65 cancella in parte gli altri tre negativi. Il risultato sarebbe circa meno 1.17, e il valore assoluto sarebbe 1.17, quindi niente violazione.
+
+Questo e il motivo profondo: non conta solo se i quattro E sono grandi. Conta se, una volta inseriti nella combinazione CHSH con i suoi segni fissi, tendono ad allinearsi oppure a compensarsi.
+
+Nel tuo esperimento simulato succede la cosa “giusta” per far crescere S:
+
+AB contribuisce negativamente
+AB' essendo positivo, ma sottratto, contribuisce anch'esso negativamente
+A'B contribuisce negativamente
+A'B' contribuisce negativamente
+
+quindi non c'e quasi nessuna compensazione.
+
+Se vuoi una frase molto corta da ricordare, e questa:
+
+S diventa grande quando il termine con il meno ha segno opposto agli altri tre, cosi dopo la sottrazione tutti e quattro i contributi si sommano invece di annullarsi.
+
+La mia valutazione finale è:
+
+non lo chiamerei truccato
+lo chiamerei fragile come evidenza empirica
+e molto forte come interpretazione filosofica
+
+In altre parole: il risultato “S maggiore di 2” c’è nei dati riportati, ma passare da lì a “abbiamo trovato vero entanglement cognitivo analogo a quello fisico” mi sembra un salto grande. Gli autori stessi presentano il lavoro come parte di un programma teorico più ampio e difendono attivamente quella lettura; questo rende ancora più importante chiedere repliche indipendenti, preregistrate, con campioni migliori e dati grezzi pubblici.
+
+===============================================================================================================
+
+Se vogliamo trasformare la mia app in un vero strumento di raccolta dati, la struttura corretta è:
+
+la app non parte da probabilità aggregate
+la app genera o raccoglie risposte di singoli partecipanti
+da quelle risposte costruisce i conteggi
+dai conteggi calcola frequenze, E(AB), E(AB'), E(A'B), E(A'B') e infine S
+
+Se inizialmente imponiamo partecipanti casuali, allora ogni partecipante sceglie una delle 4 risposte possibili in ciascun contesto con probabilità uniforme 1 su 4.
+
+In quel caso, il risultato atteso è:
+
+ogni cella circa al 25 percento
+ogni E circa 0
+S circa 0
+
+con piccole oscillazioni dovute al campionamento finito.
+
+Quindi sì: questa versione sarebbe molto più onesta metodologicamente, perché non “eredita” nessun pattern dal paper. E infatti, se produce S vicino a 0, questo è esattamente quello che ci aspettiamo da risposte casuali.
+
+file completo aggiornato con 4 modelli:
+
+Casuale uniforme
+baseline, atteso S circa 0
+Locale classico saturato
+ogni partecipante ha variabili nascoste locali per A, A', B, B'; costruito in modo che il valore CHSH individuale sia sempre 2, quindi il dataset aggregato tende a S = 2 ma non supera il limite classico
+Geometria: massima differenza angolare
+i partecipanti preferiscono coppie di venti più opposte nella stessa riga; questo modello può produrre S > 2
+Semantica: contrasto caldo/freddo + angolo
+aggiunge una regola sintetica di significato, senza usare in alcun modo i dati del paper; anche questo può produrre S > 2

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-labelledby="title">
+<title id="title">Alice e Bob cenano insieme in terrazza</title>
+<rect width="800" height="450" fill="#e0f2fe"/><circle cx="680" cy="80" r="35" fill="#fde68a"/>
+<path d="M0 260 Q120 180 250 260 T500 250 T800 260 V450 H0" fill="#a7c7bb"/>
+<path d="M0 330 H800 V450 H0" fill="#d6c5b1"/><path d="M0 300 H800 M40 300 V360 M130 300 V360 M670 300 V360 M760 300 V360" stroke="#64748b" stroke-width="8"/>
+<path d="M35 30 Q400 120 765 30" fill="none" stroke="#475569" stroke-width="3"/>
+<g fill="#fef3c7" stroke="#d97706"><circle cx="120" cy="48" r="8"/><circle cx="260" cy="74" r="8"/><circle cx="400" cy="80" r="8"/><circle cx="540" cy="74" r="8"/><circle cx="680" cy="48" r="8"/></g>
+<text x="400" y="135" text-anchor="middle" font-family="Arial,sans-serif" font-size="25" fill="#164e63">«Questa sera scegliamo insieme.»</text>
+<g stroke="#44382e" stroke-width="3"><path d="M210 330 V260 Q250 225 290 260 V330" fill="#fb7185"/><circle cx="250" cy="215" r="31" fill="#f6c9a8"/><path d="M218 213 Q214 170 252 177 Q285 177 282 218 L269 199 Q240 211 218 213" fill="#78350f"/>
+<path d="M510 330 V260 Q550 225 590 260 V330" fill="#60a5fa"/><circle cx="550" cy="215" r="31" fill="#f6c9a8"/><path d="M518 204 Q525 167 557 179 Q579 183 581 205" fill="#334155"/>
+<ellipse cx="400" cy="330" rx="205" ry="60" fill="#fff7ed"/><path d="M300 370 L285 440 M500 370 L515 440" stroke-width="12"/>
+<ellipse cx="295" cy="327" rx="45" ry="21" fill="white"/><ellipse cx="505" cy="327" rx="45" ry="21" fill="white"/>
+<ellipse cx="295" cy="327" rx="28" ry="12" fill="#b99260"/><path d="M475 328 Q505 300 530 328 Q505 343 475 328" fill="#cbd5e1"/>
+<path d="M393 273 V292 L385 305 V340 Q400 349 415 340 V305 L407 292 V273 Z" fill="#365948"/>
+<g fill="white"><path d="M345 285 H365 V305 Q355 320 345 305 Z"/><path d="M440 285 H460 V305 Q450 320 440 305 Z"/></g>
+<path d="M347 296 H363 V305 Q355 314 347 305 Z" fill="#9f1239" stroke="none"/><path d="M442 296 H458 V305 Q450 314 442 305 Z" fill="#facc15" stroke="none"/>
+<path d="M355 314 V330 M345 330 H365 M450 314 V330 M440 330 H460"/>
+</g></svg>

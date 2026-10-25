@@ -41,9 +41,9 @@ const NessunMessaggio = sim(() =>
   import("./sim/SimMessaggi").then((m) => m.NessunMessaggio),
 );
 const Trucchi = sim(() => import("./sim/SimTrucchi").then((m) => m.Trucchi));
-// Per ora la sala a nido d'ape e la terrazza usano due simulazioni esistenti.
+// La sala a nido d’ape conserva la simulazione originale.
 const SalaAlveare = sim(() => import("../archivio/R60/v4/Pagina"));
-const Terrazza = sim(() => import("../archivio/R59/Pagina"));
+const Terrazza = sim(() => import("./sim/SimTerrazza"));
 
 function P({ children }) {
   return <p className="leading-relaxed">{children}</p>;
@@ -2109,42 +2109,31 @@ export const CAPITOLI = [
   {
     id: "terrazza",
     numero: "Capitolo 9",
-    titolo: "La terrazza dei venti",
-    immagine: "/r04/8-terrazza.svg",
-    alt: "Alice e Bob sulla terrazza del ristorante, davanti a una grande rosa dei venti.",
-    domanda: "Si può trovare un po' di stregoneria nei pensieri dei clienti?",
+    titolo: "Insieme in terrazza",
+    immagine: "/r04/8-terrazza-cena.svg",
+    alt: "Alice e Bob allo stesso tavolo in terrazza, con due piatti, vino e il menù delle quattro cene.",
+    domanda: "Che cosa succede ai conti quando si può scegliere insieme?",
     Testo: () => (
       <>
-        <P>
-          D'estate il ristorante normale apre la terrazza. Il sommelier, tra un
-          vino e l'altro, propone un gioco ai clienti: indicare due direzioni
-          del vento che siano un buon esempio di «direzioni diverse». È un
-          esperimento vero di psicologia: mettendo le risposte nella forma del
-          registro del maître, S risulta circa 2,48, oltre il limite di un
-          ristorante normale.
-        </P>
-        <P>
-          Qui però c'è una differenza importante. A scegliere la coppia è una
-          sola persona, non <A /> e <B /> in due sale lontane: nessuno deve
-          comunicare. Il valore di S racconta come si collegano i significati
-          delle parole, non un legame tra sale separate, e la sua
-          interpretazione è ancora discussa.
-        </P>
+        <P>Dopo la poco entusiasmante esperienza nella sala a nido d’ape, <A /> e <B /> decidono che nelle prossime sere ceneranno allo stesso tavolo. E non in una sala qualsiasi: in terrazza.</P>
+        <P>Le portate sono già decise quando arriva il momento di ordinare da bere. «Al colore del vino penso io», dice Alice. «Allora io scelgo se prenderlo al calice o in bottiglia», risponde Bob. Questa volta possono parlare, guardare entrambi i piatti e assaggiare l’uno dal piatto dell’altra.</P>
+        <P>Ogni sera Alice riceve, a sorte, un risotto ai funghi oppure pesce al forno; Bob pesce al forno oppure arrosto. Non devono scegliere nello stesso momento: basta che ciascuno estragga il proprio piatto senza farsi guidare dalla scelta dell’altro. Chiamiamo A il risotto di Alice e A′ il suo pesce; B il pesce di Bob e B′ il suo arrosto. AB, AB′, A′B e A′B′ indicano quindi quattro coppie di piatti, non quattro risposte.</P>
+        <P>Bob preferisce una bottiglia da condividere quando i due piatti si accompagnano allo stesso vino: rosso con risotto ai funghi e arrosto, bianco con due piatti di pesce. Quando invece uno mangia pesce e l’altro un piatto più intenso, preferisce ordinare al calice, così ciascuno può scegliere il proprio vino.</P>
+        <P>Alice ama il rosso con i funghi. Quando entrambi ordinano pesce, preferisce il bianco. Se invece Bob ordina arrosto, Alice gli chiede sempre un assaggio: anche quando il suo piatto è pesce, sceglie il rosso per accompagnare quei bocconi di carne. Il registro annota il colore del vino di Alice e la scelta di Bob fra calici e bottiglia. Quando ordinano calici separati, il colore del vino di Bob non entra nel conto.</P>
+        <P>Ma una preferenza non è un obbligo. Possiamo immaginare che entrambi scelgano ciò che preferiscono quattro sere su cinque; nella quinta Alice cambia colore e Bob cambia formato, ciascuno per conto proprio. Oppure che siano meno abitudinari e cambino una sera su quattro, o più abitudinari e cambino soltanto una sera su dieci. Proviamo queste diverse ipotesi, usando la stessa frequenza per entrambi, e osserviamo quali conti ne vengono fuori. Sono ipotesi sui personaggi, non frequenze misurate su persone reali.</P>
+        <P>Il maître assegna +1 a rosso e calice, −1 a bianco e bottiglia, poi calcola S con la stessa formula dei capitoli precedenti. Se entrambi mantengono la preferenza quattro sere su cinque, S medio è <strong>1,44</strong>. Se lo fanno nove sere su dieci, diventa <strong>2,56</strong>. Il risultato dipende dunque da quanto sono stabili queste abitudini: non scegliamo le percentuali per ottenere un particolare S.</P>
+        <P>Il motivo è sul tavolo: entrambi conoscono l’intero menù. A parità del proprio piatto, Alice può cambiare vino guardando quello di Bob; anche Bob considera tutti e due i piatti. Il limite 2 richiedeva decisioni basate soltanto sulle informazioni della propria sala. Qui quelle condizioni non ci sono più. Non assegniamo cene vinte: confrontiamo i correlatori, senza introdurre una nuova regola di vittoria.</P>
       </>
     ),
-    lezione:
-      "Un S oltre 2 vuol dire stregoneria solo quando le due scelte avvengono davvero in sale separate. In terrazza no.",
+    lezione: "S oltre 2, da solo, non basta: bisogna chiedersi quali informazioni hanno guidato le risposte. In terrazza si decide conoscendo entrambi i piatti.",
     Sim: Terrazza,
+    avvertenzaSim: "Questa simulazione usa preferenze classiche inventate e decisioni che conoscono entrambi i piatti. Non riproduce dati sperimentali né correlazioni quantistiche fra sistemi isolati.",
     guida: {
-      cosa: "Le risposte dei clienti sulle direzioni del vento, generate da un modello che imita l'esperimento (non sono i dati originali), disposte nella griglia delle coppie di direzioni.",
-      avvio:
-        "Scegli il «Modello partecipanti» e premi «Genera dataset», oppure «Genera 85» o «Genera 8500» per il numero di clienti; «Reset» ricomincia.",
-      leggere:
-        "In alto «S osservato» e «Violazione CHSH»; sotto, la griglia con le frequenze delle risposte.",
-      mostra:
-        "S supera 2, come nel ristorante stregato, anche se nessuno deve comunicare: le scelte avvengono in una sola testa. Racconta come si legano i significati delle parole, non un legame tra sale lontane.",
+      cosa: "Cene allo stesso tavolo: Alice sceglie il colore del proprio vino e Bob il formato dell’ordinazione. Le scelte dipendono da entrambi i piatti.",
+      avvio: "Premi +1 cena, +200 cene o +10.000 cene. Puoi cambiare quanto spesso entrambi mantengono la propria preferenza: il registro si azzera. Azzera mantiene le preferenze selezionate.",
+      leggere: "Confronta S atteso e osservato. La tabella spiega ogni coppia di piatti e mostra i quattro correlatori. Le sigle indicano i piatti: A = risotto, A′ = pesce di Alice; B = pesce, B′ = arrosto di Bob.",
+      mostra: "Confronta le ipotesi: preferenza mantenuta nel 75%, 80%, 85%, 90% o 95% delle sere. S atteso cambia; quello osservato oscilla intorno a esso. Il confronto con 2 riguarda le condizioni delle sale isolate, che qui non valgono. Non è una prova di stregoneria.",
     },
-    riferimenti: [R.aerts],
   },
   {
     id: "conto",
