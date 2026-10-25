@@ -1,9 +1,9 @@
 // Modello narrativo classico: entrambe le decisioni conoscono entrambi i piatti.
 export const CENE = [
-  { id: 'AB', alice: 'Risotto ai funghi', bob: 'Frittura di pesce', rosso: true, bottiglia: false, motivo: 'Piatti diversi: due calici. Alice sceglie rosso perché non mangiano entrambi pesce.' },
-  { id: 'AB′', alice: 'Risotto ai funghi', bob: 'Arrosto', rosso: true, bottiglia: true, motivo: 'Due piatti intensi: rosso e una bottiglia da condividere.' },
-  { id: 'A′B', alice: 'Pesce al forno', bob: 'Frittura di pesce', rosso: false, bottiglia: true, motivo: 'Entrambi mangiano pesce: bianco e una bottiglia da condividere.' },
-  { id: 'A′B′', alice: 'Pesce al forno', bob: 'Arrosto', rosso: true, bottiglia: false, motivo: 'Piatti diversi: due calici. Alice sceglie rosso perché non mangiano entrambi pesce.' },
+  { id: 'AB', alice: 'Risotto ai funghi', bob: 'Frittura di pesce', rosso: true, bottiglia: false, motivo: 'Rosso: un compromesso per chi mangia pesce. Bob limita la quantità a un calice a testa.' },
+  { id: 'AB′', alice: 'Risotto ai funghi', bob: 'Arrosto', rosso: true, bottiglia: true, motivo: 'Il rosso si abbina a entrambi i piatti: una bottiglia da condividere.' },
+  { id: 'A′B', alice: 'Pesce al forno', bob: 'Frittura di pesce', rosso: false, bottiglia: true, motivo: 'Il bianco si abbina a entrambi i piatti di pesce: una bottiglia da condividere.' },
+  { id: 'A′B′', alice: 'Pesce al forno', bob: 'Arrosto', rosso: true, bottiglia: false, motivo: 'Rosso: un compromesso per chi mangia pesce. Bob limita la quantità a un calice a testa.' },
 ];
 
 export function correlatori(pVino, pFormato) {

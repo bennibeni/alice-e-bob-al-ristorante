@@ -2116,14 +2116,36 @@ export const CAPITOLI = [
     Testo: () => (
       <>
         <P>Dopo la poco entusiasmante esperienza nella sala a nido d’ape, <A /> e <B /> decidono che nelle prossime sere ceneranno allo stesso tavolo. E non in una sala qualsiasi: in terrazza.</P>
-        <P>Le portate sono già decise quando arriva il momento di ordinare da bere. «Scelgo io il colore del vino per entrambi», dice Alice. «Allora io scelgo se prenderlo al calice o in bottiglia», risponde Bob. Questa volta possono parlare, guardare entrambi i piatti e assaggiare l’uno dal piatto dell’altra.</P>
-        <P>Alice sceglie casualmente fra risotto ai funghi e pesce al forno; Bob fra frittura di pesce e arrosto. Ciascuno sceglie per conto proprio, con la stessa probabilità per le due portate e senza farsi influenzare dalla scelta dell’altro. Chiamiamo A il risotto di Alice e A′ il suo pesce; B la frittura di pesce di Bob e B′ il suo arrosto. AB, AB′, A′B e A′B′ indicano quindi quattro coppie di piatti.</P>
-        <P>Alice propone una regola semplice: «Prendiamo bianco se mangiamo entrambi pesce; altrimenti rosso». Il colore scelto vale per entrambi.</P>
-        <P>Bob decide il formato: «Prendiamo una bottiglia se i nostri piatti suggeriscono lo stesso vino; altrimenti due calici». Risotto ai funghi e arrosto suggeriscono entrambi rosso; pesce al forno e frittura di pesce suggeriscono entrambi bianco. Quando invece uno mangia pesce e l’altro no, Bob ordina due calici, pensando che ciascuno possa avere il vino più adatto al proprio piatto. Ma il cameriere, affascinato dagli occhi di Alice, porta entrambi i calici <strong>sempre del colore scelto da Alice</strong>.</P>
-        <P>Per il tavolo c’è quindi una sola ordinazione del vino: rosso o bianco, in bottiglia o in due calici.</P>
-        <P>Alice e Bob seguono sempre queste regole. È il cameriere a introdurre un imprevisto: tutto preso da Alice, una sera su cinque in media sbaglia il formato richiesto da Bob. Se Bob chiede una bottiglia, porta due calici; se chiede due calici, porta una bottiglia. Il colore resta quello scelto da Alice. L’errore avviene casualmente, con la stessa probabilità per tutte le coppie di piatti.</P>
-        <P>Il maître registra ciò che viene effettivamente servito. Assegna +1 a rosso e due calici, −1 a bianco e bottiglia, poi calcola S con la stessa formula dei capitoli precedenti. Con un errore di formato su cinque emerge un valore medio di <strong>2,4</strong>: oltre il limite classico di 2 e sotto il massimo quantistico di circa 2,83. È un modello inventato per il racconto, non un risultato sperimentale.</P>
-        <P>«E se il cameriere non sbagliasse mai?» chiede Bob. Il maître rifà i conti: S arriverebbe a <strong>4</strong>. Gli errori attenuano le correlazioni; non sono loro a permettere di superare 2. Il ristorante stregato raggiunge circa 2,83 con le sale separate, senza scambi di informazioni sulle domande prima delle risposte. In terrazza le condizioni sono diverse.</P>
+        <h3 className="text-lg font-semibold">Il colore e il formato: le regole del tavolo</h3>
+        <P>Le portate sono già decise quando arriva il momento di ordinare da bere.<br />
+          «Scelgo io il colore del vino per entrambi», dice Alice.<br />
+          «Allora io scelgo il formato: se prenderlo al calice o in bottiglia», risponde Bob.</P>
+        <P>Questa volta possono parlare, guardare entrambi i piatti e assaggiare l’uno dal piatto dell’altra. Alice sceglie casualmente fra risotto ai funghi e pesce al forno; Bob fra frittura di pesce e arrosto. Ciascuno sceglie per conto proprio, con la stessa probabilità per le due portate e senza farsi influenzare dall’altro.</P>
+        <P>Alice propone una regola semplice per il colore: «Prendiamo bianco se mangiamo entrambi pesce; altrimenti rosso». Il colore scelto vale per tutto il tavolo.</P>
+        <P>«Il colore lo scegli tu», dice Bob. «Se si abbina bene a entrambi i piatti, prendiamo una bottiglia; altrimenti basta un calice a testa».</P>
+        <P>Il menù parla chiaro: risotto ai funghi e arrosto suggeriscono entrambi il rosso; pesce al forno e frittura di pesce suggeriscono entrambi il bianco. Al tavolo, quindi, l’ordinazione resta sempre unica: un solo tipo di vino (rosso o bianco), servito o in bottiglia o in due calici.</P>
+        <h3 className="text-lg font-semibold">L’imprevisto e i conti del maître</h3>
+        <P>Alice e Bob seguono sempre queste regole. È il cameriere a introdurre un imprevisto: intento ad ammirare Alice, <strong>una sera su cinque in media sbaglia il formato richiesto da Bob</strong>. Se Bob chiede una bottiglia, porta due calici; se chiede due calici, porta una bottiglia. Il colore del vino, invece, resta sempre quello corretto scelto da Alice. L’errore avviene in modo del tutto casuale, con la stessa probabilità per qualsiasi coppia di piatti.</P>
+        <P>Il maître registra sul suo taccuino ciò che viene effettivamente servito al tavolo e assegna dei punteggi numerici:</P>
+        <ul className="list-disc space-y-1 pl-6">
+          <li><strong>Colore:</strong> Rosso = +1, Bianco = −1.</li>
+          <li><strong>Formato:</strong> Due calici = +1, Bottiglia = −1.</li>
+        </ul>
+        <P>Per ogni cena, il maître moltiplica il numero del colore per il numero del formato. Poi calcola il correlatore medio (E) per ciascuno dei quattro menù possibili.</P>
+        <P>Per capire come si arriva al valore finale S, usiamo delle abbreviazioni: <strong>A</strong> indica il risotto di Alice e <strong>A′</strong> il suo pesce al forno; <strong>B</strong> indica la frittura di Bob e <strong>B′</strong> il suo arrosto. La formula per calcolare l’indice delle correlazioni S è:</P>
+        <p className="overflow-x-auto rounded-lg bg-zinc-100 p-3 font-mono text-sm dark:bg-zinc-800">S = |E(AB) − E(AB′) + E(A′B) + E(A′B′)|</p>
+        <P>Se il cameriere fosse perfetto e non sbagliasse mai, le regole di Alice e Bob produrrebbero questi risultati:</P>
+        <ul className="list-disc space-y-2 pl-6">
+          <li>Per il menù <strong>AB</strong> (Risotto e Frittura): i piatti chiedono due calici di rosso. Il prodotto è (+1) × (+1) = <strong>+1</strong>.</li>
+          <li>Per il menù <strong>AB′</strong> (Risotto e Arrosto): i piatti chiedono una bottiglia di rosso. Il prodotto è (+1) × (−1) = <strong>−1</strong>.</li>
+          <li>Per il menù <strong>A′B</strong> (Pesce e Frittura): i piatti chiedono una bottiglia di bianco. Il prodotto è (−1) × (−1) = <strong>+1</strong>.</li>
+          <li>Per il menù <strong>A′B′</strong> (Pesce e Arrosto): i piatti chiedono due calici di rosso. Il prodotto è (+1) × (+1) = <strong>+1</strong>.</li>
+        </ul>
+        <P>Inserendo questi quattro correlatori senza errori (+1, −1, +1, +1) nella formula, il segno meno davanti a E(AB′) trasforma quel −1 in un +1. Il calcolo diventa così una somma perfetta: |1 − (−1) + 1 + 1| = 4. Senza errori, S arriverebbe al massimo algebrico di 4.</P>
+        <P>Ma il cameriere sbaglia il formato nel 20% dei casi. In quelle cene distratte, il formato si inverte e il prodotto finale cambia segno. Ogni correlatore viene quindi moltiplicato per 0,8 − 0,2 = 0,6.</P>
+        <P>I quattro correlatori medi attesi diventano quindi +0,6, −0,6, +0,6, +0,6. Quelli osservati sul taccuino possono oscillare, soprattutto con poche cene. Applicando la formula ai valori attesi:</P>
+        <p className="overflow-x-auto rounded-lg bg-zinc-100 p-3 font-mono text-sm dark:bg-zinc-800">S = |0,6 − (−0,6) + 0,6 + 0,6| = 2,4</p>
+        <P>Con un errore su cinque, emerge un valore medio di <strong>2,4</strong>: un numero che oltrepassa il limite classico di 2, pur restando sotto il massimo quantistico di circa 2,83.</P>
         <P>Il motivo è sul tavolo: entrambi conoscono l’intero menù. A parità del proprio piatto, Alice può cambiare vino guardando quello di Bob; anche Bob considera tutti e due i piatti. Il limite 2 richiedeva decisioni basate soltanto sulle informazioni della propria sala. Qui quelle condizioni non ci sono più. Non assegniamo cene vinte: confrontiamo i correlatori, senza introdurre una nuova regola di vittoria.</P>
       </>
     ),
@@ -2133,7 +2155,7 @@ export const CAPITOLI = [
     guida: {
       cosa: "Cene allo stesso tavolo: Alice sceglie il colore del vino per entrambi e Bob decide fra bottiglia e due calici dello stesso vino. Le scelte dipendono da entrambi i piatti.",
       avvio: "Premi ▶ Avvia per animare le cene e Pausa per fermarle; oppure usa +1 cena. L’esperimento si ferma a 200 cene. Azzera ricomincia il registro. Alice e Bob mantengono le loro regole; il cameriere inverte il formato richiesto con probabilità 20% a ogni cena.",
-      leggere: "Confronta S atteso e osservato. La tabella spiega ogni coppia di piatti e mostra i quattro correlatori. Le sigle indicano i piatti: A = risotto, A′ = pesce di Alice; B = frittura di pesce, B′ = arrosto di Bob.",
+      leggere: "Confronta S atteso e osservato. La tabella spiega ogni coppia di piatti e mostra i quattro correlatori.",
       mostra: "Il valore medio atteso è S = 2,4. Il registro conta il colore e il formato serviti, non soltanto quelli richiesti. Qui conoscono entrambi i piatti, quindi non valgono le condizioni delle sale isolate. Con poche cene il valore osservato può oscillare molto; aumentando le cene tende ad avvicinarsi al valore atteso. Il confronto con 2 riguarda le condizioni delle sale isolate, che qui non valgono. Non è una prova di stregoneria.",
     },
   },
@@ -2147,33 +2169,66 @@ export const CAPITOLI = [
     Testo: () => (
       <>
         <P>
-          A fine stagione il proprietario chiude i conti. Einstein sperava che
-          dietro ogni stregoneria ci fosse un ristorante normale con gusti
-          decisi in anticipo e sale indipendenti. Nel 1964 John Bell mostrò che
-          la domanda si poteva decidere contando le sere, con quello che oggi si
-          chiama <TeoremaBell />: nessun ristorante normale, per quanto furbo e
-          senza imbrogli, può avere i conti del ristorante stregato.
+          A fine stagione il proprietario chiude i conti. Si può spiegare il
+          ristorante stregato con istruzioni concordate in anticipo e risposte
+          basate soltanto sulle informazioni disponibili nella propria sala?
+          Nel 1964 John Bell mostrò come mettere alla prova questa possibilità,
+          con quello che oggi si chiama <TeoremaBell />. Nella sfida del nostro
+          racconto, se le domande sono scelte liberamente e indipendentemente
+          dalle istruzioni e non passano informazioni fra le sale prima delle
+          risposte, un ristorante normale non può superare il 75% di cene vinte,
+          equivalente a S = 2. Nemmeno istruzioni che includano scelte casuali
+          permettono di superare quel limite.
         </P>
         <P>
-          Il ristorante stregato esiste davvero. Al posto delle bottiglie
-          gemelle ci sono coppie di particelle prodotte insieme, che i fisici
-          chiamano entangled; al posto delle sale, laboratori lontani. Gli
-          esperimenti, da quelli di Alain Aspect nel 1982 a quelli senza
-          scappatoie del 2015, hanno dato sempre ragione al ristorante stregato,
-          e nel 2022 Aspect, John Clauser e Anton Zeilinger hanno ricevuto il
-          Nobel per la fisica.
+          Le correlazioni del ristorante stregato esistono davvero. Negli
+          esperimenti fisici si usano coppie di particelle entangled e misure
+          effettuate in laboratori lontani. Dagli esperimenti di Alain Aspect
+          del 1982 a quelli del 2015 che hanno chiuso insieme le principali
+          scappatoie sperimentali, i risultati hanno confermato violazioni
+          delle disuguaglianze di Bell. Nel 2022 Aspect, John Clauser e Anton
+          Zeilinger hanno ricevuto il Nobel per la fisica.
+        </P>
+        <figure className="max-w-3xl space-y-2">
+          <img
+            src="https://scienzapertutti.infn.it/images/stories/evidenza/nobel_2022.jpg"
+            alt="Alain Aspect, John F. Clauser e Anton Zeilinger, premi Nobel per la fisica 2022."
+            loading="lazy"
+            className="h-auto w-full rounded-xl"
+          />
+          <figcaption className="text-xs text-zinc-600 dark:text-zinc-400">
+            Alain Aspect, John F. Clauser e Anton Zeilinger: Nobel per la fisica 2022.
+            {" "}<a href="https://scienzapertutti.infn.it/images/stories/evidenza/nobel_2022.jpg" target="_blank" rel="noreferrer" className="underline">Immagine: ScienzaPerTutti · INFN</a>.
+          </figcaption>
+        </figure>
+        <P>
+          La terrazza ci ha insegnato a controllare anche le condizioni del
+          confronto. Lì basta un normale cameriere, con un errore di formato
+          su cinque, per ottenere S medio = 2,4. Senza errori si arriverebbe
+          a 4: Alice e Bob decidono conoscendo entrambi i piatti. Questo non
+          riproduce il risultato delle sale separate, dove quell’informazione
+          non è disponibile.
         </P>
         <P>
-          La stregoneria ha però i suoi limiti: non manda messaggi e non supera
-          2,83. E il ristorante non dice quale idea abbandonare: che i gusti
-          esistano prima della domanda, che le sale siano davvero indipendenti,
-          o qualcos'altro ancora. Dice soltanto che non si possono tenere tutte
-          insieme.
+          Nella sfida CHSH con le sale separate, il massimo quantistico è
+          S = 2√2, circa 2,83, che corrisponde a circa l’85,4% di cene vinte.
+          Queste correlazioni non permettono di inviare messaggi scegliendo
+          il risultato della propria misura. Il risultato sorprendente non è
+          dunque un numero alto da solo: è superare 2 rispettando le condizioni
+          che impediscono al ristorante normale di farlo.
+        </P>
+        <P>
+          Quale descrizione della realtà dobbiamo allora rivedere? Il teorema
+          non sceglie per noi un’interpretazione della fisica quantistica.
+          Esclude però che tutte quelle correlazioni si possano spiegare con
+          sole istruzioni condivise e risposte locali, mantenendo indipendenti
+          le scelte delle misure. È questo il conto che il ristorante normale
+          non riesce a pagare.
         </P>
       </>
     ),
     lezione:
-      "Escluso: gusti decisi in anticipo in un mondo locale. Confermato: il ristorante stregato esiste, ma non manda messaggi. Ancora aperto: quale idea lasciare andare.",
+      "Nelle stesse condizioni: il ristorante normale si ferma a S = 2, quello quantistico può arrivare a 2√2 senza inviare messaggi. Conoscere entrambe le domande, come in terrazza, cambia il confronto.",
     riferimenti: [R.bell, R.hensen, R.nobel],
   },
 ];

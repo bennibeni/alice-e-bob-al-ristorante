@@ -6,7 +6,7 @@ import { Button, Dialog, DialogTrigger, Heading, Modal, ModalOverlay } from 'rea
 import { Vino, useIntervallo } from './ui';
 import { CENE, cenaTerrazza, correlatori, valoreS } from '../logica/terrazza';
 
-const vuoto = () => ({ n: [0, 0, 0, 0], somme: [0, 0, 0, 0], ultime: [null, null, null, null], ultima: null });
+const vuoto = () => ({ n: [0, 0, 0, 0], somme: [0, 0, 0, 0], ultime: [null, null, null, null], errori: 0, ultima: null });
 const f = n => n.toLocaleString('it-IT', { maximumFractionDigits: 3, minimumFractionDigits: 2 });
 const button = 'rounded border border-zinc-400 px-3 py-2 hover:bg-black/5 dark:hover:bg-white/10';
 
@@ -63,13 +63,14 @@ export default function SimTerrazza() {
     if (numero <= 0) return;
     const cene = Array.from({ length: numero }, () => cenaTerrazza(Math.floor(Math.random() * 4), pVino, pFormato));
     setRegistro(prima => {
-      const prossimo = { n: [...prima.n], somme: [...prima.somme], ultime: [...prima.ultime], ultima: prima.ultima };
+      const prossimo = { n: [...prima.n], somme: [...prima.somme], ultime: [...prima.ultime], errori: prima.errori, ultima: prima.ultima };
       for (const cena of cene) {
         const i = cena.i;
         prossimo.n[i]++;
         prossimo.somme[i] += cena.prodotto;
         prossimo.ultima = cena;
         prossimo.ultime[i] = cena;
+        if (cena.bottiglia !== CENE[i].bottiglia) prossimo.errori++;
       }
       return prossimo;
     });
@@ -97,7 +98,7 @@ export default function SimTerrazza() {
         const attiva = registro.ultima?.i === i;
         const errore = ultima && ultima.bottiglia !== c.bottiglia;
         return <tr key={c.id} className={`transition-colors duration-300 ${attiva ? 'bg-amber-100 dark:bg-amber-950/60' : ''}`}>
-          <td className="min-w-48 border-b p-2"><strong>{c.id}</strong>
+          <td className="min-w-48 border-b p-2">
             <div className="mt-2 rounded-md border-2 border-rose-500 px-2 py-1 text-rose-700 dark:text-rose-300">Alice · {c.alice}</div>
             <div className="mt-1 rounded-md border-2 border-sky-500 px-2 py-1 text-sky-700 dark:text-sky-300">Bob · {c.bob}</div>
           </td>
@@ -112,14 +113,18 @@ export default function SimTerrazza() {
     </table></div>
     <p className="text-xs text-zinc-600 dark:text-zinc-400">La riga gialla indica l’ultima cena. Rosa: piatto di Alice; azzurro: piatto di Bob. A destra dell’ordine richiesto resta visibile l’ultimo servizio di ciascun menù; verde e rosso segnalano se il formato è corretto, non una cena vinta o persa.</p>
     <style>{`@keyframes comparsa-cena { from { opacity: 0.4; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }`}</style>
-    <details className="rounded-lg border p-4"><summary className="cursor-pointer font-medium">Come si fanno i conti?</summary>
-      <div className="mt-3 space-y-2 text-sm">
-        <p>Rosso = +1, bianco = −1; due calici = +1, bottiglia = −1. E è la media del prodotto dei due numeri per ciascuna coppia di piatti. Non misura quanto sia buono il vino.</p>
-        <p>S = |E(AB) − E(AB′) + E(A′B) + E(A′B′)|.</p>
-        <p>Le preferenze danno i segni +, −, +, +. Senza errori, i quattro correlatori sono +1, −1, +1, +1 e S = 4. Il cameriere inverte il formato nel 20% dei casi: ogni prodotto cambia segno in quelle cene. Ciascun correlatore è quindi moltiplicato per 0,8 − 0,2 = 0,6.</p>
-        <p>I correlatori medi del servizio sono +0,6, −0,6, +0,6, +0,6: S medio = 2,4. Un errore su cinque è una frequenza attesa, non un obbligo di sbagliare esattamente una volta ogni cinque cene. Le ipotesi sono narrative, non dati sperimentali.</p>
-      </div>
-    </details>
+    <section aria-label="Risultati del test" className="space-y-3 rounded-lg border border-zinc-300 p-4 dark:border-zinc-700">
+      <h4 className="text-lg font-semibold">Risultati del test</h4>
+      {totale === 0 ? <p className="text-sm">Avvia il test: al termine delle 200 cene troverai qui il risultato e il confronto con la previsione del modello.</p> : <>
+        <p className="text-sm"><strong>{totale >= 200 ? 'Test concluso' : 'Test in corso'}: {totale} cene su 200.</strong> Il cameriere ha sbagliato formato <strong>{registro.errori} volte</strong> ({f(100 * registro.errori / totale)}% dei servizi). La probabilità prevista è 20%: su 200 cene ci aspettiamo in media 40 errori, non necessariamente esattamente 40.</p>
+        {completo ? <>
+          <p className="text-sm">Dalle quattro medie osservate nella tabella risulta:</p>
+          <p className="overflow-x-auto rounded bg-zinc-100 p-3 font-mono text-sm dark:bg-zinc-800">S osservato = |{f(osservati[0])} − ({f(osservati[1])}) + ({f(osservati[2])}) + ({f(osservati[3])})| = <strong>{f(valoreS(osservati))}</strong></p>
+          <p className="text-sm">Il modello prevede <strong>S medio = 2,40</strong>. In questo test lo scarto è <strong>{f(Math.abs(valoreS(osservati) - valoreS(e)))}</strong>. Ogni menù ha un proprio numero di cene e di errori: S usa le quattro medie separate, non soltanto la percentuale totale di errori.</p>
+          <p className="text-sm">{valoreS(osservati) > 2 ? 'In questa esecuzione S supera 2.' : 'In questa esecuzione S non supera 2, anche se il valore medio previsto è 2,40.'} Con 200 cene rimangono oscillazioni casuali; ripetendo il test si possono ottenere risultati diversi.</p>
+        </> : <p className="text-sm">Per calcolare S manca ancora almeno una delle quattro coppie di piatti. Il risultato comparirà quando tutte avranno almeno una cena registrata.</p>}
+      </>}
+    </section>
     <aside className="space-y-3 rounded-lg bg-sky-50 p-4 text-sm dark:bg-sky-950/30">
       <h4 className="font-semibold">Perché non è stregoneria?</h4>
       <p>Nelle sale separate, ciascuno doveva rispondere conoscendo soltanto la propria domanda. È in quelle condizioni che il ristorante normale non poteva superare S = 2.</p>
