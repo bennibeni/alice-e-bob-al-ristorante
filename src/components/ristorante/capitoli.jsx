@@ -2148,7 +2148,7 @@ export const CAPITOLI = [
         <P>I quattro correlatori medi attesi diventano quindi +0,6, −0,6, +0,6, +0,6. Quelli osservati sul taccuino possono oscillare, soprattutto con poche cene. Applicando la formula ai valori attesi:</P>
         <p className="overflow-x-auto rounded-lg bg-zinc-100 p-3 font-mono text-sm dark:bg-zinc-800">S = |0,6 − (−0,6) + 0,6 + 0,6| = 2,4</p>
         <P>Con un errore su cinque, emerge un valore medio di <strong>2,4</strong>: un numero che oltrepassa il limite classico di 2, pur restando sotto il massimo quantistico di circa 2,83.</P>
-        <P>Il motivo è sul tavolo: entrambi conoscono l’intero menù. A parità del proprio piatto, Alice può cambiare vino guardando quello di Bob; anche Bob considera tutti e due i piatti. Il limite 2 richiedeva decisioni basate soltanto sulle informazioni della propria sala. Qui quelle condizioni non ci sono più. Non assegniamo cene vinte: confrontiamo i correlatori, senza introdurre una nuova regola di vittoria.</P>
+        <P>Il motivo è sul tavolo: entrambi conoscono l’intero menù. La regola di Alice resta sempre la stessa, ma per applicarla deve conoscere entrambi i piatti. Anche Bob considera tutti e due i piatti. Il limite 2 richiedeva decisioni basate soltanto sulle informazioni della propria sala. Qui quelle condizioni non ci sono più. Non assegniamo cene vinte: confrontiamo i correlatori, senza introdurre una nuova regola di vittoria.</P>
         <ParalleloFisica />
       </>
     ),
