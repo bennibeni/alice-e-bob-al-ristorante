@@ -45,6 +45,7 @@ const NessunMessaggio = sim(() =>
 const Trucchi = sim(() => import("./sim/SimTrucchi").then((m) => m.Trucchi));
 // La sala a nido d’ape conserva la simulazione originale.
 const SalaAlveare = sim(() => import("../archivio/R60/v4/Pagina"));
+const GiocoVenti = sim(() => import("./sim/SimVenti"));
 const Terrazza = sim(() => import("./sim/SimTerrazza"));
 
 function P({ children }) {
@@ -164,6 +165,18 @@ const R = {
     testo:
       "D. Aerts et al., «Spin and Wind Directions I: Identifying Entanglement in Nature and Cognition», Foundations of Science 23, 323 (2018)",
     url: "https://arxiv.org/abs/1508.00434",
+  },
+  videoBell: {
+    testo: "Massimiliano Sassoli de Bianchi, «La dimostrazione completa delle diseguaglianze di Bell (24)» — video, dal minuto 3:41",
+    url: "https://www.youtube.com/watch?v=59N46vZyS3k&t=221s",
+  },
+  videoEntanglement: {
+    testo: "Massimiliano Sassoli de Bianchi, «Qual è il mistero dell’entanglement quantistico? (20)» — video",
+    url: "https://www.youtube.com/watch?v=AknvAmoXDuM",
+  },
+  videoVenti: {
+    testo: "Massimiliano Sassoli de Bianchi, «La mente quantistica: pensieri entangled come gli spin (98)» — approfondimento sull’esperimento cognitivo delle direzioni del vento; distinto dal modello meteorologico di questo capitolo",
+    url: "https://www.youtube.com/watch?v=GkXDCwzsXSg",
   },
   nobel: {
     testo:
@@ -492,6 +505,8 @@ export const CAPITOLI = [
     domanda: "Che cosa succede quando due amici cenano senza potersi parlare?",
     Testo: () => (
       <>
+        <P>Nei dieci capitoli che seguono accompagneremo Alice e Bob in situazioni diverse: dalle cene in sale separate alle sfide del proprietario, fino ai giochi e alle ordinazioni allo stesso tavolo in terrazza. Ogni situazione ci aiuterà a capire che cosa possono spiegare gli accordi fra i due amici e che cosa rende sorprendenti le correlazioni quantistiche.</P>
+        <P>Cominciamo presentando i due ristoranti e lo scenario della prima cena, da cui prenderà avvio il Capitolo 1.</P>
         <P>
           In fondo alla stessa via ci sono due ristoranti identici: stesse sale,
           stesso menù, stessa cantina, almeno all'apparenza. Il primo è un
@@ -1020,7 +1035,7 @@ export const CAPITOLI = [
       mostra:
         "Il ristorante normale non scende mai sotto 5/9: ci arriva solo con il 100% di schede miste, e più monocolori usa più sale (la frase sotto le schede dà il valore esatto). Il ristorante stregato si assesta su metà. Il motivo si vede nella tabella: sulla diagonale (stessa portata) 100% in entrambi; fuori diagonale il ristorante normale ha almeno il 33%, il ristorante stregato solo il 25%.",
     },
-    riferimenti: [R.bell, R.mermin],
+    riferimenti: [R.bell, R.mermin, R.videoBell],
   },
   {
     id: "sfida",
@@ -1325,7 +1340,7 @@ export const CAPITOLI = [
       mostra:
         "Nessun piano del ristorante normale supera il 75% e S = 2: la tabellina delle quattro serate mostra sempre almeno una sera persa. Il ristorante stregato arriva all'85,4% e S ≈ 2,83.",
     },
-    riferimenti: [R.chsh, R.tsirelson],
+    riferimenti: [R.chsh, R.tsirelson, R.videoBell, R.videoEntanglement],
   },
   {
     id: "quadrato",
@@ -2109,15 +2124,58 @@ export const CAPITOLI = [
     },
   },
   {
-    id: "terrazza",
+    id: "venti",
     numero: "Capitolo 9",
+    titolo: "Il gioco dei venti",
+    immagine: "/r04/8-terrazza.svg",
+    alt: "Alice e Bob in terrazza davanti a una rosa dei venti.",
+    domanda: "Un valore di S oltre 2 basta per parlare di stregoneria?",
+    Testo: () => (
+      <>
+        <P>Dopo la poco entusiasmante esperienza nella sala a nido d’ape, <A /> e <B /> decidono che nelle prossime sere ceneranno allo stesso tavolo. E non in una sala qualsiasi: in terrazza.</P>
+        <P>Il sommelier appoggia sul tavolo una rosa dei venti. «Scegliete ciascuno una direzione, senza consultarvi». Nelle sere senza vento non hanno indizi: Alice e Bob scelgono a caso, indipendentemente. Nelle sere ventose, invece, la stessa brezza raggiunge entrambi e può orientare le loro scelte.</P>
+        <P>Solo dopo che hanno annotato le proprie direzioni, il sommelier estrae a caso una delle quattro domande del gioco, ciascuna con probabilità ¼, indipendentemente dal vento e dalle direzioni annotate. Nella prima serata viene estratta la domanda che propone queste quattro coppie: Nord e Nord-est, Nord e Sud-ovest, Sud e Nord-est, Sud e Sud-ovest. È il sommelier a individuare la coppia più simile alle direzioni annotate: la prima direzione corrisponde ad Alice, la seconda a Bob. Ogni sera ripete l’estrazione della domanda: la stessa può ricomparire anche per più sere consecutive.</P>
+        <P>Il sommelier ha dimestichezza con i conti e non si affida a un’impressione: per ogni coppia proposta calcola lo scarto angolare rispetto alla direzione di Alice e quello rispetto alla direzione di Bob. Somma i due scarti e sceglie la coppia con la somma più piccola. In questo modo ottiene un risultato preciso. Con questo criterio il calcolo equivale a trovare separatamente l’alternativa più vicina alla direzione di Alice e quella più vicina alla direzione di Bob.</P>
+        <details className="group rounded-lg border border-sky-200 bg-white/70 p-3 dark:border-sky-900 dark:bg-zinc-900/50">
+          <summary className="cursor-pointer text-sm font-semibold uppercase tracking-wide text-sky-900 dark:text-sky-200">Le alternative del sommelier</summary>
+          <div className="mt-3 space-y-3 overflow-x-auto">
+            <p className="text-sm">La domanda estratta nella prima serata del racconto è la prima riga, AB. Ogni riga elenca tutte e quattro le coppie fra cui il sommelier cerca quella più vicina alle direzioni annotate.</p>
+            <table className="w-full text-left text-sm"><thead><tr><th className="p-2">Domanda</th><th className="p-2">Le quattro coppie proposte</th></tr></thead><tbody>{[
+              ["AB", ["Nord e Nord-est", "Nord e Sud-ovest", "Sud e Nord-est", "Sud e Sud-ovest"]],
+              ["AB′", ["Nord e Sud-est", "Nord e Nord-ovest", "Sud e Sud-est", "Sud e Nord-ovest"]],
+              ["A′B", ["Est e Nord-est", "Est e Sud-ovest", "Ovest e Nord-est", "Ovest e Sud-ovest"]],
+              ["A′B′", ["Est e Sud-est", "Est e Nord-ovest", "Ovest e Sud-est", "Ovest e Nord-ovest"]],
+            ].map(([id,coppie]) => <tr key={id} className={id === "AB" ? "bg-amber-50 dark:bg-amber-950/30" : ""}><td className="border-t p-2 align-top font-semibold">{id}{id === "AB" && <span className="mt-1 block text-xs font-normal">Prima serata del racconto</span>}</td><td className="border-t p-2"><ul className="grid gap-x-4 gap-y-1 sm:grid-cols-2">{coppie.map(c => <li key={c}>{c}</li>)}</ul></td></tr>)}</tbody></table>
+            <p className="text-sm">In ciascuna coppia, la prima direzione riguarda Alice e la seconda Bob. A significa Nord/Sud, A′ Est/Ovest; B significa Nord-est/Sud-ovest, B′ Sud-est/Nord-ovest. Le prime alternative di ciascun gruppo valgono +1, le seconde −1. La domanda è estratta a caso, indipendentemente dalle direzioni annotate e dal vento.</p>
+          </div>
+        </details>
+        <P>«Se sentiamo lo stesso vento, le nostre risposte dovrebbero assomigliarsi di più», osserva Bob. È possibile: una causa comune può creare correlazioni. Ma basta a superare S = 2? Il maître propone di confrontare due modelli semplici.</P>
+        <P>Nel modello senza vento, tutte le direzioni sono equiprobabili e le scelte sono indipendenti. Nel modello con vento, Alice e Bob percepiscono perfettamente la stessa direzione, che cambia a caso da una sera all’altra. È un caso ideale, senza errori di percezione, utile per isolare l’effetto della causa comune.</P>
+        <P>Il risultato atteso è <strong>S = 0 senza vento</strong> e <strong>S = 2 con vento</strong>. Il vento rende le risposte correlate, ma con questa regola non permette di oltrepassare il limite: ciascuna componente della coppia finale dipende soltanto dalla propria direzione e dalle proprie alternative. Nelle 200 sere simulate i valori osservati possono oscillare, anche oltre 2 per caso.</P>
+        <P>Nel capitolo successivo torneremo a piatti e vino: lì le due decisioni useranno davvero entrambe le portate e il confronto cambierà.</P>
+      </>
+    ),
+    lezione: "Una causa comune può correlare le risposte senza superare il limite CHSH. Conta come vengono prodotte le risposte, non soltanto il fatto che si assomiglino.",
+    Sim: GiocoVenti,
+    avvertenzaSim: "Modello classico inventato: nessun dato psicologico o meteorologico. Con vento si assume una percezione identica per entrambi; le oscillazioni del campione non modificano il limite teorico.",
+    guida: {
+      cosa: "Confronta direzioni iniziali indipendenti, senza vento, e una direzione condivisa, con vento. Il sommelier determina la coppia finale minimizzando la somma degli scarti angolari.",
+      avvio: "Scegli senza vento o con vento, poi premi Avvia oppure +1 sera. Il test si ferma a 200 sere. Cambiare scenario azzera il registro.",
+      leggere: "La rosa mostra le direzioni iniziali dell’ultima sera; la riga gialla indica la domanda estratta. Confronta i quattro correlatori e S osservato con la previsione esatta.",
+      mostra: "S atteso passa da 0 a 2: emergono correlazioni da una causa comune, senza superamento teorico del limite locale. Con poche sere S osservato può essere diverso.",
+    },
+    riferimenti: [R.videoVenti],
+  },
+  {
+    id: "terrazza",
+    numero: "Capitolo 10",
     titolo: "Insieme in terrazza",
     immagine: "/r04/8-terrazza-cena.svg",
     alt: "Alice e Bob allo stesso tavolo in terrazza; il cameriere guarda Alice mentre serve il vino.",
     domanda: "Che cosa succede ai conti quando si può scegliere insieme?",
     Testo: () => (
       <>
-        <P>Dopo la poco entusiasmante esperienza nella sala a nido d’ape, <A /> e <B /> decidono che nelle prossime sere ceneranno allo stesso tavolo. E non in una sala qualsiasi: in terrazza.</P>
+        <P>Dopo il gioco dei venti, <A /> e <B /> restano al loro tavolo in terrazza. «Per ottenere un numero oltre 2 servono davvero pensieri quantistici?» si chiedono. Il maître propone di guardare le loro normali ordinazioni: anche lì le decisioni possono dipendere dall’intera situazione.</P>
         <h3 className="text-lg font-semibold">Il colore e il formato: le regole del tavolo</h3>
         <P>Le portate sono già decise quando arriva il momento di ordinare da bere.<br />
           «Scelgo io il colore del vino per entrambi», dice Alice.<br />
@@ -2128,6 +2186,9 @@ export const CAPITOLI = [
         <P>Il menù parla chiaro: risotto ai funghi e arrosto suggeriscono entrambi il rosso; pesce al forno e frittura di pesce suggeriscono entrambi il bianco. Al tavolo, quindi, l’ordinazione resta sempre unica: un solo tipo di vino (rosso o bianco), servito o in bottiglia o in due calici.</P>
         <h3 className="text-lg font-semibold">L’imprevisto e i conti del maître</h3>
         <P>Alice e Bob seguono sempre queste regole. È il cameriere a introdurre un imprevisto: intento ad ammirare Alice, <strong>una sera su cinque in media sbaglia il formato richiesto da Bob</strong>. Se Bob chiede una bottiglia, porta due calici; se chiede due calici, porta una bottiglia. Il colore del vino, invece, resta sempre quello corretto scelto da Alice. L’errore avviene in modo del tutto casuale, con la stessa probabilità per qualsiasi coppia di piatti.</P>
+        <details className="group rounded-lg border border-sky-200 bg-white/70 p-3 dark:border-sky-900 dark:bg-zinc-900/50">
+          <summary className="cursor-pointer text-sm font-semibold uppercase tracking-wide text-sky-900 dark:text-sky-200">I conti del maître</summary>
+          <div className="mt-4 space-y-4">
         <P>Il maître registra sul suo taccuino ciò che viene effettivamente servito al tavolo e assegna dei punteggi numerici:</P>
         <ul className="list-disc space-y-1 pl-6">
           <li><strong>Colore:</strong> Rosso = +1, Bianco = −1.</li>
@@ -2147,8 +2208,11 @@ export const CAPITOLI = [
         <P>Ma il cameriere sbaglia il formato nel 20% dei casi. In quelle cene distratte, il formato si inverte e il prodotto finale cambia segno. Ogni correlatore viene quindi moltiplicato per 0,8 − 0,2 = 0,6.</P>
         <P>I quattro correlatori medi attesi diventano quindi +0,6, −0,6, +0,6, +0,6. Quelli osservati sul taccuino possono oscillare, soprattutto con poche cene. Applicando la formula ai valori attesi:</P>
         <p className="overflow-x-auto rounded-lg bg-zinc-100 p-3 font-mono text-sm dark:bg-zinc-800">S = |0,6 − (−0,6) + 0,6 + 0,6| = 2,4</p>
+          </div>
+        </details>
         <P>Con un errore su cinque, emerge un valore medio di <strong>2,4</strong>: un numero che oltrepassa il limite classico di 2, pur restando sotto il massimo quantistico di circa 2,83.</P>
         <P>Il motivo è sul tavolo: entrambi conoscono l’intero menù. La regola di Alice resta sempre la stessa, ma per applicarla deve conoscere entrambi i piatti. Anche Bob considera tutti e due i piatti. Il limite 2 richiedeva decisioni basate soltanto sulle informazioni della propria sala. Qui quelle condizioni non ci sono più. Non assegniamo cene vinte: confrontiamo i correlatori, senza introdurre una nuova regola di vittoria.</P>
+        <P>Questo modello delle ordinazioni non spiega le risposte dell’esperimento sui venti. Mostra però perché un valore di S oltre 2, da solo, non basta a identificare un fenomeno quantistico.</P>
         <ParalleloFisica />
       </>
     ),
@@ -2205,12 +2269,20 @@ export const CAPITOLI = [
           </figcaption>
         </figure>
         <P>
-          La terrazza ci ha insegnato a controllare anche le condizioni del
-          confronto. Lì basta un normale cameriere, con un errore di formato
-          su cinque, per ottenere S medio = 2,4. Senza errori si arriverebbe
-          a 4: Alice e Bob decidono conoscendo entrambi i piatti. Questo non
-          riproduce il risultato delle sale separate, dove quell’informazione
-          non è disponibile.
+          Il gioco dei venti distingue il caso indipendente da una causa
+          comune. Senza vento, nel nostro modello S atteso è 0; con la stessa
+          brezza percepita da entrambi arriva a 2. Le risposte diventano
+          correlate, ma il criterio degli scarti angolari equivale a due
+          decisioni separate. Il vento comune non basta a superare il limite.
+        </P>
+        <P>
+          Nell’ordinazione del vino, invece, le regole di Alice e Bob usano
+          entrambe le portate: senza errori darebbero S = 4. Il cameriere,
+          sbagliando formato una volta su cinque in media, attenua il valore
+          atteso a 2,4. Qui non sono gli errori a creare il superamento di 2:
+          è cambiata l’informazione usata nelle decisioni. Questo non riproduce
+          il risultato delle sale separate, dove ciascuno dispone soltanto
+          della propria domanda e delle eventuali istruzioni condivise.
         </P>
         <P>
           Nella sfida CHSH con le sale separate, il massimo quantistico è
@@ -2231,7 +2303,7 @@ export const CAPITOLI = [
       </>
     ),
     lezione:
-      "Nelle stesse condizioni: il ristorante normale si ferma a S = 2, quello quantistico può arrivare a 2√2 senza inviare messaggi. Conoscere entrambe le domande, come in terrazza, cambia il confronto.",
-    riferimenti: [R.bell, R.hensen, R.nobel],
+      "Una causa comune, come il vento, può correlare risposte locali senza superare S = 2. Usare entrambe le domande cambia le condizioni. Il risultato quantistico supera 2 anche senza questo scambio di informazioni.",
+    riferimenti: [R.bell, R.hensen, R.nobel, R.videoEntanglement],
   },
 ];

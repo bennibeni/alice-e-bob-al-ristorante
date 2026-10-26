@@ -27,7 +27,9 @@ Le simulazioni riproducono statistiche matematiche: non costituiscono un esperim
 
 ## Terrazza — modello delle ordinazioni
 
-Il capitolo 9, «Insieme in terrazza», usa `sim/SimTerrazza.jsx` e `logica/terrazza.js`.
+Il capitolo 10, «Insieme in terrazza», usa `sim/SimTerrazza.jsx` e `logica/terrazza.js`.
 I piatti sono estratti indipendentemente; colore e formato dipendono da entrambi i piatti. Alice e Bob seguono sempre le proprie regole. Il cameriere inverte il formato richiesto con probabilità 20%, mantenendo il colore: il registro del servizio ha S atteso = 2,4. Senza errori S sarebbe 4. Il modello è narrativo, con parametri fissi e decisioni che conoscono entrambi i piatti; non usa dati sperimentali sui venti.
 
 La versione precedente è salvata in `backups/terrazza-dei-venti-20261025-113910`; il simulatore R59 rimane intatto nell’archivio.
+
+Il capitolo 9, «Il gioco dei venti» (`/#venti`), reintroduce il gioco cognitivo con una narrazione distinta e il simulatore sintetico R59. Il riferimento sperimentale (S circa 2,48) è separato dai dati generati. Il capitolo 10 mantiene `/#terrazza`, con i conti dettagliati in un accordion e il parallelo con la fisica.
