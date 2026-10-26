@@ -12,6 +12,8 @@ import { Problema } from "./problema";
 import { LezioneEsterna } from "./lezione";
 import { TabellaAccordi } from "./sim/TabellaAccordi";
 import { TeoremaBell } from "./teorema";
+import { ParalleloFisica } from "./ParalleloFisica";
+import { CorrelatoreInfo } from "./CorrelatoreInfo";
 import { CodiceCalcolatrice } from "./CodiceCalcolatrice";
 
 function Caricamento() {
@@ -2131,7 +2133,7 @@ export const CAPITOLI = [
           <li><strong>Colore:</strong> Rosso = +1, Bianco = −1.</li>
           <li><strong>Formato:</strong> Due calici = +1, Bottiglia = −1.</li>
         </ul>
-        <P>Per ogni cena, il maître moltiplica il numero del colore per il numero del formato. Poi calcola il correlatore medio (E) per ciascuno dei quattro menù possibili.</P>
+        <P>Per ogni cena, il maître moltiplica il numero del colore per il numero del formato. Poi calcola il correlatore E<CorrelatoreInfo />, cioè la media di questi prodotti per ciascuno dei quattro menù possibili.</P>
         <P>Per capire come si arriva al valore finale S, usiamo delle abbreviazioni: <strong>A</strong> indica il risotto di Alice e <strong>A′</strong> il suo pesce al forno; <strong>B</strong> indica la frittura di Bob e <strong>B′</strong> il suo arrosto. La formula per calcolare l’indice delle correlazioni S è:</P>
         <p className="overflow-x-auto rounded-lg bg-zinc-100 p-3 font-mono text-sm dark:bg-zinc-800">S = |E(AB) − E(AB′) + E(A′B) + E(A′B′)|</p>
         <P>Se il cameriere fosse perfetto e non sbagliasse mai, le regole di Alice e Bob produrrebbero questi risultati:</P>
@@ -2147,6 +2149,7 @@ export const CAPITOLI = [
         <p className="overflow-x-auto rounded-lg bg-zinc-100 p-3 font-mono text-sm dark:bg-zinc-800">S = |0,6 − (−0,6) + 0,6 + 0,6| = 2,4</p>
         <P>Con un errore su cinque, emerge un valore medio di <strong>2,4</strong>: un numero che oltrepassa il limite classico di 2, pur restando sotto il massimo quantistico di circa 2,83.</P>
         <P>Il motivo è sul tavolo: entrambi conoscono l’intero menù. A parità del proprio piatto, Alice può cambiare vino guardando quello di Bob; anche Bob considera tutti e due i piatti. Il limite 2 richiedeva decisioni basate soltanto sulle informazioni della propria sala. Qui quelle condizioni non ci sono più. Non assegniamo cene vinte: confrontiamo i correlatori, senza introdurre una nuova regola di vittoria.</P>
+        <ParalleloFisica />
       </>
     ),
     lezione: "S oltre 2, da solo, non basta: bisogna chiedersi quali informazioni hanno guidato le risposte. In terrazza si decide conoscendo entrambi i piatti.",
