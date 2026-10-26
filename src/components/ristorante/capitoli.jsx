@@ -2052,7 +2052,7 @@ export const CAPITOLI = [
         <ul className="ml-5 list-disc space-y-2 leading-relaxed">
           <li><strong>Stessa linea:</strong> i due numeri sono diversi.</li>
           <li><strong>Nessuna linea comune, numeri diversi:</strong> manca
-          sia l&apos;allineamento sia l&apos;uguaglianza.</li>
+            sia l&apos;allineamento sia l&apos;uguaglianza.</li>
           <li><strong>Gemelli:</strong> stesso numero, nessuna linea comune.</li>
         </ul>
         <P>
@@ -2145,7 +2145,7 @@ export const CAPITOLI = [
               ["AB′", ["Nord e Sud-est", "Nord e Nord-ovest", "Sud e Sud-est", "Sud e Nord-ovest"]],
               ["A′B", ["Est e Nord-est", "Est e Sud-ovest", "Ovest e Nord-est", "Ovest e Sud-ovest"]],
               ["A′B′", ["Est e Sud-est", "Est e Nord-ovest", "Ovest e Sud-est", "Ovest e Nord-ovest"]],
-            ].map(([id,coppie]) => <tr key={id} className={id === "AB" ? "bg-amber-50 dark:bg-amber-950/30" : ""}><td className="border-t p-2 align-top font-semibold">{id}{id === "AB" && <span className="mt-1 block text-xs font-normal">Prima serata del racconto</span>}</td><td className="border-t p-2"><ul className="grid gap-x-4 gap-y-1 sm:grid-cols-2">{coppie.map(c => <li key={c}>{c}</li>)}</ul></td></tr>)}</tbody></table>
+            ].map(([id, coppie]) => <tr key={id} className={id === "AB" ? "bg-amber-50 dark:bg-amber-950/30" : ""}><td className="border-t p-2 align-top font-semibold">{id}{id === "AB" && <span className="mt-1 block text-xs font-normal">Prima serata del racconto</span>}</td><td className="border-t p-2"><ul className="grid gap-x-4 gap-y-1 sm:grid-cols-2">{coppie.map(c => <li key={c}>{c}</li>)}</ul></td></tr>)}</tbody></table>
             <p className="text-sm">In ciascuna coppia, la prima direzione riguarda Alice e la seconda Bob. A significa Nord/Sud, A′ Est/Ovest; B significa Nord-est/Sud-ovest, B′ Sud-est/Nord-ovest. Le prime alternative di ciascun gruppo valgono +1, le seconde −1. La domanda è estratta a caso, indipendentemente dalle direzioni annotate e dal vento.</p>
           </div>
         </details>
@@ -2189,25 +2189,25 @@ export const CAPITOLI = [
         <details className="group rounded-lg border border-sky-200 bg-white/70 p-3 dark:border-sky-900 dark:bg-zinc-900/50">
           <summary className="cursor-pointer text-sm font-semibold uppercase tracking-wide text-sky-900 dark:text-sky-200">I conti del maître</summary>
           <div className="mt-4 space-y-4">
-        <P>Il maître registra sul suo taccuino ciò che viene effettivamente servito al tavolo e assegna dei punteggi numerici:</P>
-        <ul className="list-disc space-y-1 pl-6">
-          <li><strong>Colore:</strong> Rosso = +1, Bianco = −1.</li>
-          <li><strong>Formato:</strong> Due calici = +1, Bottiglia = −1.</li>
-        </ul>
-        <P>Per ogni cena, il maître moltiplica il numero del colore per il numero del formato. Poi calcola il correlatore E<CorrelatoreInfo />, cioè la media di questi prodotti per ciascuno dei quattro menù possibili.</P>
-        <P>Per capire come si arriva al valore finale S, usiamo delle abbreviazioni: <strong>A</strong> indica il risotto di Alice e <strong>A′</strong> il suo pesce al forno; <strong>B</strong> indica la frittura di Bob e <strong>B′</strong> il suo arrosto. La formula per calcolare l’indice delle correlazioni S è:</P>
-        <p className="overflow-x-auto rounded-lg bg-zinc-100 p-3 font-mono text-sm dark:bg-zinc-800">S = |E(AB) − E(AB′) + E(A′B) + E(A′B′)|</p>
-        <P>Se il cameriere fosse perfetto e non sbagliasse mai, le regole di Alice e Bob produrrebbero questi risultati:</P>
-        <ul className="list-disc space-y-2 pl-6">
-          <li>Per il menù <strong>AB</strong> (Risotto e Frittura): i piatti chiedono due calici di rosso. Il prodotto è (+1) × (+1) = <strong>+1</strong>.</li>
-          <li>Per il menù <strong>AB′</strong> (Risotto e Arrosto): i piatti chiedono una bottiglia di rosso. Il prodotto è (+1) × (−1) = <strong>−1</strong>.</li>
-          <li>Per il menù <strong>A′B</strong> (Pesce e Frittura): i piatti chiedono una bottiglia di bianco. Il prodotto è (−1) × (−1) = <strong>+1</strong>.</li>
-          <li>Per il menù <strong>A′B′</strong> (Pesce e Arrosto): i piatti chiedono due calici di rosso. Il prodotto è (+1) × (+1) = <strong>+1</strong>.</li>
-        </ul>
-        <P>Inserendo questi quattro correlatori senza errori (+1, −1, +1, +1) nella formula, il segno meno davanti a E(AB′) trasforma quel −1 in un +1. Il calcolo diventa così una somma perfetta: |1 − (−1) + 1 + 1| = 4. Senza errori, S arriverebbe al massimo algebrico di 4.</P>
-        <P>Ma il cameriere sbaglia il formato nel 20% dei casi. In quelle cene distratte, il formato si inverte e il prodotto finale cambia segno. Ogni correlatore viene quindi moltiplicato per 0,8 − 0,2 = 0,6.</P>
-        <P>I quattro correlatori medi attesi diventano quindi +0,6, −0,6, +0,6, +0,6. Quelli osservati sul taccuino possono oscillare, soprattutto con poche cene. Applicando la formula ai valori attesi:</P>
-        <p className="overflow-x-auto rounded-lg bg-zinc-100 p-3 font-mono text-sm dark:bg-zinc-800">S = |0,6 − (−0,6) + 0,6 + 0,6| = 2,4</p>
+            <P>Il maître registra sul suo taccuino ciò che viene effettivamente servito al tavolo e assegna dei punteggi numerici:</P>
+            <ul className="list-disc space-y-1 pl-6">
+              <li><strong>Colore:</strong> Rosso = +1, Bianco = −1.</li>
+              <li><strong>Formato:</strong> Due calici = +1, Bottiglia = −1.</li>
+            </ul>
+            <P>Per ogni cena, il maître moltiplica il numero del colore per il numero del formato. Poi calcola il correlatore E<CorrelatoreInfo />, cioè la media di questi prodotti per ciascuno dei quattro menù possibili.</P>
+            <P>Per capire come si arriva al valore finale S, usiamo delle abbreviazioni: <strong>A</strong> indica il risotto di Alice e <strong>A′</strong> il suo pesce al forno; <strong>B</strong> indica la frittura di Bob e <strong>B′</strong> il suo arrosto. La formula per calcolare l’indice delle correlazioni S è:</P>
+            <p className="overflow-x-auto rounded-lg bg-zinc-100 p-3 font-mono text-sm dark:bg-zinc-800">S = |E(AB) − E(AB′) + E(A′B) + E(A′B′)|</p>
+            <P>Se il cameriere fosse perfetto e non sbagliasse mai, le regole di Alice e Bob produrrebbero questi risultati:</P>
+            <ul className="list-disc space-y-2 pl-6">
+              <li>Per il menù <strong>AB</strong> (Risotto e Frittura): i piatti chiedono due calici di rosso. Il prodotto è (+1) × (+1) = <strong>+1</strong>.</li>
+              <li>Per il menù <strong>AB′</strong> (Risotto e Arrosto): i piatti chiedono una bottiglia di rosso. Il prodotto è (+1) × (−1) = <strong>−1</strong>.</li>
+              <li>Per il menù <strong>A′B</strong> (Pesce e Frittura): i piatti chiedono una bottiglia di bianco. Il prodotto è (−1) × (−1) = <strong>+1</strong>.</li>
+              <li>Per il menù <strong>A′B′</strong> (Pesce e Arrosto): i piatti chiedono due calici di rosso. Il prodotto è (+1) × (+1) = <strong>+1</strong>.</li>
+            </ul>
+            <P>Inserendo questi quattro correlatori senza errori (+1, −1, +1, +1) nella formula, il segno meno davanti a E(AB′) trasforma quel −1 in un +1. Il calcolo diventa così una somma perfetta: |1 − (−1) + 1 + 1| = 4. Senza errori, S arriverebbe al massimo algebrico di 4.</P>
+            <P>Ma il cameriere sbaglia il formato nel 20% dei casi. In quelle cene distratte, il formato si inverte e il prodotto finale cambia segno. Ogni correlatore viene quindi moltiplicato per 0,8 − 0,2 = 0,6.</P>
+            <P>I quattro correlatori medi attesi diventano quindi +0,6, −0,6, +0,6, +0,6. Quelli osservati sul taccuino possono oscillare, soprattutto con poche cene. Applicando la formula ai valori attesi:</P>
+            <p className="overflow-x-auto rounded-lg bg-zinc-100 p-3 font-mono text-sm dark:bg-zinc-800">S = |0,6 − (−0,6) + 0,6 + 0,6| = 2,4</p>
           </div>
         </details>
         <P>Con un errore su cinque, emerge un valore medio di <strong>2,4</strong>: un numero che oltrepassa il limite classico di 2, pur restando sotto il massimo quantistico di circa 2,83.</P>
@@ -2246,6 +2246,8 @@ export const CAPITOLI = [
           risposte, un ristorante normale non può superare il 75% di cene vinte,
           equivalente a S = 2. Nemmeno istruzioni che includano scelte casuali
           permettono di superare quel limite.
+          Ah! L'ultima volta che si sono visti Alice e Bob al ristorante, il maitre gli aveva fatto trovare un tavolo speciale, riservato per loro, con 4 mazzetti di carte da gioco coperti sopra uno strano dispositivo elettronico.
+          Sembra che i due si siano calati giù dalla terrazza del ristorante per poi sparire nel nulla.
         </P>
         <P>
           Le correlazioni del ristorante stregato esistono davvero. Negli
