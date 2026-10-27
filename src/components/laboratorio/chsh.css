@@ -505,3 +505,21 @@
   overflow-wrap: anywhere;
   font-size: 18px;
 }
+.chsh-four-example { margin-top: 24px; border-top: 1px solid #dedfd6; padding-top: 20px; }
+.chsh-four-board { margin-top: 24px; }
+.chsh-four-nodes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.chsh-game .chsh-four-node { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 4px; min-width: 0; }
+.chsh-four-wires { width: 100%; height: 110px; overflow: visible; }
+.chsh-four-wire { fill: none; stroke: currentColor; stroke-width: 3; vector-effect: non-scaling-stroke; }
+.chsh-four-edge-0 { color: #b03c78; }
+.chsh-four-edge-1 { color: #9b6b08; }
+.chsh-four-edge-2 { color: #287858; }
+.chsh-four-edge-3 { color: #3566b2; }
+.chsh-four-dim { opacity: .3; }
+.chsh-four-outcomes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.chsh-game .chsh-four-outcome { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px; border-top: 4px solid currentColor; font-size: 13px; }
+.chsh-game .chsh-four-outcome.chsh-four-edge-0 { border-top-color: #b03c78; }
+.chsh-game .chsh-four-outcome.chsh-four-edge-1 { border-top-color: #9b6b08; }
+.chsh-game .chsh-four-outcome.chsh-four-edge-2 { border-top-color: #287858; }
+.chsh-game .chsh-four-outcome.chsh-four-edge-3 { border-top-color: #3566b2; }
+@media (max-width: 480px) { .chsh-four-outcomes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

@@ -12,6 +12,7 @@ import {
 } from "react-aria-components";
 import { strategies, cases, wins, score, quantumProbability } from "./model.js";
 import "./chsh.css";
+import QuattroRisposte from "./QuattroRisposte";
 import { LezioneEsterna } from "../ristorante/lezione";
 
 const percent = (value) =>
@@ -728,6 +729,7 @@ export default function CHSHGame() {
               accordo classico supera il 75%.
             </p>
           </div>
+          <QuattroRisposte alice={alice} bob={bob} onChange={(a, b) => { setAlice(a); setBob(b); setHistory([]); }} />
         </div>
       ) : (
         <div className="chsh-panel">
