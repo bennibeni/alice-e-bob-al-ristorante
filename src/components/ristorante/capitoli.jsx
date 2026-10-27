@@ -32,6 +32,7 @@ const TrePortate = sim(() =>
   import("./sim/SimPortate").then((m) => m.TrePortate),
 );
 const SfidaChef = sim(() => import("./sim/SimSfida").then((m) => m.SfidaChef));
+const MenuStelle = sim(() => import("./sim/MenuStelle"));
 const MenuDegustazione = sim(() =>
   import("./sim/SimQuadrato").then((m) => m.MenuDegustazione),
 );
@@ -504,7 +505,7 @@ export const CAPITOLI = [
     domanda: "Che cosa succede quando due amici cenano senza potersi parlare?",
     Testo: () => (
       <>
-        <P>Nei dieci capitoli che seguono accompagneremo Alice e Bob in situazioni diverse: dalle cene in sale separate alle sfide del proprietario, fino ai giochi e alle ordinazioni allo stesso tavolo in terrazza. Ogni situazione ci aiuterà a capire che cosa possono spiegare gli accordi fra i due amici e che cosa rende sorprendenti le correlazioni quantistiche.</P>
+        <P>Negli undici capitoli che seguono accompagneremo Alice e Bob in situazioni diverse: dalle cene in sale separate alle sfide del proprietario, fino ai giochi e alle ordinazioni allo stesso tavolo in terrazza. Ogni situazione ci aiuterà a capire che cosa possono spiegare gli accordi fra i due amici e che cosa rende sorprendenti le correlazioni quantistiche.</P>
         <P>Cominciamo presentando i due ristoranti e lo scenario della prima cena, da cui prenderà avvio il Capitolo 1.</P>
         <P>
           In fondo alla stessa via ci sono due ristoranti identici: stesse sale,
@@ -1526,8 +1527,57 @@ export const CAPITOLI = [
     riferimenti: [R.mermin1990, R.mermin1993, R.aravind, R.cleve],
   },
   {
-    id: "contabile",
+    id: "stelle",
     numero: "Capitolo 5",
+    titolo: "Il menù a cinque stelle",
+    immagine: "/r04/5-stelle.svg",
+    alt: "Dieci piatti ai punti di una stella: cinque percorsi da quattro piatti, quattro con rossi pari e uno con rossi dispari.",
+    domanda: "Che cosa succede se Alice e Bob devono seguire regole diverse?",
+    Testo: () => (
+      <>
+        <P>Il menù degustazione ha lasciato il proprietario senza parole: nel ristorante stregato si può vincere ogni sera. Lo chef decide di cambiare la forma della sfida. Disegna una stella con dieci piatti e cinque percorsi, ognuno di quattro piatti. Ogni piatto appartiene esattamente a due percorsi. Il quinto percorso è disegnato in blu con un tratto più spesso. Nel tabellone interattivo il rosso evidenzia il percorso selezionato di Bob.</P>
+        <P>I camerieri estraggono a sorte un piatto e lo assegnano ad Alice che sceglie il suo vino. Uno dei due percorsi che contengono il piatto di Alice viene scelto casualmente e assegnato a Bob che sceglie i vini dei quattro piatti. Alice non conosce il percorso di Bob e Bob non sa quale piatto è stato assegnato ad Alice.</P>
+        <P>Ogni cena propone quindi una coppia di richieste: ad Alice «Che vino scegli per questo piatto?», a Bob «Quali vini scegli per questo percorso?». Chiameremo questa coppia una <strong>domanda del gioco</strong>.</P>
+        <P>Ci sono <strong>10 piatti possibili per Alice</strong> e, per ciascuno, <strong>2 percorsi possibili per Bob</strong>: in totale <strong>10 × 2 = 20 domande</strong>. Per esempio, se viene estratto il piatto 1, Bob può ricevere il percorso 1 oppure il percorso 2, i due che lo contengono. Sono due domande distinte, anche se Alice riceve lo stesso piatto.</P>
+        <P>Ogni piatto viene estratto con probabilità 1/10 e ciascuno dei suoi due percorsi con probabilità 1/2. Ogni coppia piatto–percorso ha dunque probabilità <strong>1/10 × 1/2 = 1/20, cioè il 5%</strong>. È su queste venti possibilità che si calcola quante cene può vincere un accordo.</P>
+        <P>Lo chef conta <strong>quanti dei quattro piatti di ogni percorso hanno vino rosso</strong>:</P>
+        <ul className="ml-5 list-disc space-y-2">
+          <li>Nei <strong>percorsi 1, 2, 3 e 4</strong>, devono essere <strong>0, 2 oppure 4</strong>: un numero pari.</li>
+          <li>Nel <strong>percorso 5</strong>, devono essere <strong>1 oppure 3</strong>: un numero dispari.</li>
+        </ul>
+        <P>Gli altri piatti hanno vino bianco.</P>
+        <P>Lo chef offre la cena solo se Bob rispetta questa regola e i vini scelti dai due amici coincidono sul piatto comune. Possono prepararsi insieme prima di entrare, ma durante la cena non possono comunicare.</P>
+        <P>Un accordo classico può vincere al massimo diciannove sere su venti, il 95%. Il ristorante stregato può ancora vincere sempre. Il limite è diverso dall’88,9% del quadrato perché sono cambiate le domande del gioco: non stiamo misurando la stessa sfida.</P>
+        <details className="rounded-lg border border-zinc-300 bg-white/70 p-4 dark:border-zinc-700 dark:bg-zinc-900/40">
+          <summary className="cursor-pointer font-semibold">Perché il massimo classico è diciannove sere su venti?</summary>
+          <div className="mt-4 space-y-3">
+            <P>Fissiamo un accordo: per ciascuno dei dieci piatti Alice ha deciso un vino; per ciascuno dei cinque percorsi Bob ha deciso quattro vini. Supponiamo che questo accordo vinca tutte le venti domande e vediamo perché è impossibile.</P>
+            <ol className="ml-5 list-decimal space-y-3">
+              <li><strong>Vincere sempre impone che Bob copi i colori di Alice.</strong> Prendiamo un percorso di Bob. Ognuno dei suoi quattro piatti può essere quello assegnato ad Alice. Per vincere tutte e quattro queste domande, Bob deve quindi scegliere, su ciascun piatto, il vino che Alice ha previsto per quel piatto. Questo vale per tutti e cinque i percorsi.</li>
+              <li><strong>Contiamo i rossi seguendo i colori di Alice.</strong> Se Alice ha scelto rosso per N piatti, sommando i conteggi dei cinque percorsi otteniamo 2 × N: ogni piatto appartiene esattamente a due percorsi. Questa somma è necessariamente pari.</li>
+              <li><strong>Contiamo i rossi seguendo le regole dello chef.</strong> I primi quattro percorsi devono avere ciascuno un numero pari di rossi; il quinto un numero dispari. La somma di quattro numeri pari e uno dispari è necessariamente dispari.</li>
+              <li><strong>Le due somme non possono coincidere.</strong> Se Bob copia tutti i colori di Alice, almeno un percorso viola la regola dello chef. Se invece corregge un colore per rispettarla, su quel piatto non coincide più con Alice: la domanda formata da quel piatto e quel percorso è perdente. In ogni caso, un accordo non può vincere tutte le venti domande.</li>
+              <li><strong>Almeno una sconfitta su venti dà il limite del 95%.</strong> Ciascuna domanda ha probabilità 1/20. Un accordo che ne perde almeno una ha probabilità di vittoria al massimo 19/20 = 95%. Non significa che in ogni gruppo di venti cene si perdano esattamente una o più cene: è un limite alla probabilità, non al risultato di un campione casuale.</li>
+            </ol>
+            <P><strong>Il 95% si raggiunge davvero.</strong> Alice sceglie sempre bianco. Bob sceglie quattro bianchi nei primi quattro percorsi e un solo rosso nel quinto. Le parità sono tutte rispettate; perdono soltanto quando ad Alice viene assegnato proprio quel piatto e a Bob il quinto percorso. È una sola domanda su venti: le altre diciannove sono vincenti.</P>
+            <P>Sorteggiare accordi prima della cena non migliora il massimo: ogni accordo vince al massimo il 95% e la loro media non può superare il 95%.</P>
+          </div>
+        </details>
+      </>
+    ),
+    lezione: "Nessun accordo classico può soddisfare tutte le regole: la probabilità massima di vittoria è 19/20, il 95%. La strategia quantistica ideale arriva invece al 100%, senza comunicazione tra le sale.",
+    Sim: () => <MenuStelle standalone />,
+    guida: {
+      cosa: "Il gioco del pentagramma magico di Mermin nella variante punto-percorso: dieci piatti, cinque percorsi e venti domande equiprobabili.",
+      avvio: "Cambia i vini dei piatti nella stella oppure scegli le correlazioni quantistiche ideali. Premi Una cena o Avvia 200 cene: la sequenza mostra una cena ogni 0,125 secondi, con pausa e ripresa.",
+      leggere: "Seleziona un percorso per vedere i quattro vini concordati da Bob. Il bordo rosso segnala un disaccordo con Alice. Confronta probabilità teorica e vittorie osservate.",
+      mostra: "Il miglior accordo classico arriva al 95%; il modello quantistico ideale al 100%. Gli approfondimenti spiegano il conteggio di parità, le venti domande e le osservabili su tre qubit.",
+    },
+    riferimenti: [{testo: "Alex Arkhipov, Extending and Characterizing Quantum Magic Games (2012), PDF: pentagramma e protocollo punto-percorso.", url: "/documenti/arkhipov-quantum-magic-games.pdf"}, R.mermin1993],
+  },
+  {
+    id: "contabile",
+    numero: "Capitolo 6",
     titolo: "Il contabile",
     immagine: "/r04/4-contabile.svg",
     alt: "Il contabile alla scrivania, stupito, mentre Alice e Bob alzano entrambi un calice di rosso.",
@@ -1763,7 +1813,7 @@ export const CAPITOLI = [
   },
   {
     id: "messaggi",
-    numero: "Capitolo 6",
+    numero: "Capitolo 7",
     titolo: "Nessun messaggio tra le sale",
     immagine: "/r04/5-messaggi.svg",
     alt: "Il cameriere di Bob sceglie in segreto calice o bottiglia; nella sala di Alice la colonna del registro dice sempre rosso 50%, bianco 50%; una busta barrata sul muro.",
@@ -1891,7 +1941,7 @@ export const CAPITOLI = [
   },
   {
     id: "trucchi",
-    numero: "Capitolo 7",
+    numero: "Capitolo 8",
     titolo: "Come si bara",
     immagine: "/r04/6-trucchi.svg",
     alt: "Il maître con il registro; un cameriere corre tra le sale e sussurra a Bob come è stata servita Alice.",
@@ -1912,7 +1962,7 @@ export const CAPITOLI = [
             <strong>Il cameriere chiacchierone.</strong> Un cameriere corre fra
             le sale e sussurra a <B /> come è stata servita <A />. Con questa
             notizia Bob sceglie il colore giusto quasi ogni sera. È proprio il
-            messaggio fra le sale che i camerieri cercavano nel capitolo 6: lì
+            messaggio fra le sale che i camerieri cercavano nel capitolo 7: lì
             non passava, qui passa davvero, perché qualcuno lo porta di persona.
           </li>
           <li className="leading-relaxed">
@@ -1938,7 +1988,7 @@ export const CAPITOLI = [
         <P>
           C'è infine un quarto ristorante, solo immaginato: il super-stregato.
           Vince la sfida dello chef tutte le sere (S = 4), eppure, come nel
-          capitolo 6, la colonna di Alice resta metà rossi e metà bianchi:
+          capitolo 7, la colonna di Alice resta metà rossi e metà bianchi:
           nessun messaggio passa fra le sale. Non viola nessuna delle regole del
           racconto, ma la natura non lo permette: il ristorante stregato vero si
           ferma a 2,83. Perché proprio lì è una domanda ancora aperta.
@@ -2019,7 +2069,7 @@ export const CAPITOLI = [
   },
   {
     id: "alveare",
-    numero: "Capitolo 8",
+    numero: "Capitolo 9",
     titolo: "La sala a nido d'ape",
     immagine: "/r04/7-alveare.svg",
     alt: "Una sala con 37 tavoli esagonali numerati da 1 a 9; Alice e Bob ai lati.",
@@ -2120,7 +2170,7 @@ export const CAPITOLI = [
   },
   {
     id: "venti",
-    numero: "Capitolo 9",
+    numero: "Capitolo 10",
     titolo: "Il gioco dei venti",
     immagine: "/r04/8-terrazza.svg",
     alt: "Alice e Bob in terrazza davanti a una rosa dei venti.",
@@ -2163,7 +2213,7 @@ export const CAPITOLI = [
   },
   {
     id: "terrazza",
-    numero: "Capitolo 10",
+    numero: "Capitolo 11",
     titolo: "Insieme in terrazza",
     immagine: "/r04/8-terrazza-cena.svg",
     alt: "Alice e Bob allo stesso tavolo in terrazza; il cameriere guarda Alice mentre serve il vino.",
