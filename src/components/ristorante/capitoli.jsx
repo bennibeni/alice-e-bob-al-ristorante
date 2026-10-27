@@ -33,6 +33,7 @@ const TrePortate = sim(() =>
 );
 const SfidaChef = sim(() => import("./sim/SimSfida").then((m) => m.SfidaChef));
 const MenuStelle = sim(() => import("./sim/MenuStelle"));
+const TerzoOspite = sim(() => import("./sim/TerzoOspite"));
 const MenuDegustazione = sim(() =>
   import("./sim/SimQuadrato").then((m) => m.MenuDegustazione),
 );
@@ -505,7 +506,7 @@ export const CAPITOLI = [
     domanda: "Che cosa succede quando due amici cenano senza potersi parlare?",
     Testo: () => (
       <>
-        <P>Negli undici capitoli che seguono accompagneremo Alice e Bob in situazioni diverse: dalle cene in sale separate alle sfide del proprietario, fino ai giochi e alle ordinazioni allo stesso tavolo in terrazza. Ogni situazione ci aiuterà a capire che cosa possono spiegare gli accordi fra i due amici e che cosa rende sorprendenti le correlazioni quantistiche.</P>
+        <P>Nei dodici capitoli che seguono accompagneremo Alice e Bob in situazioni diverse: dalle cene in sale separate alle sfide del proprietario, fino ai giochi e alle ordinazioni allo stesso tavolo in terrazza. Ogni situazione ci aiuterà a capire che cosa possono spiegare gli accordi fra i due amici e che cosa rende sorprendenti le correlazioni quantistiche.</P>
         <P>Cominciamo presentando i due ristoranti e lo scenario della prima cena, da cui prenderà avvio il Capitolo 1.</P>
         <P>
           In fondo alla stessa via ci sono due ristoranti identici: stesse sale,
@@ -1576,8 +1577,39 @@ export const CAPITOLI = [
     riferimenti: [{testo: "Alex Arkhipov, Extending and Characterizing Quantum Magic Games (2012), PDF: pentagramma e protocollo punto-percorso.", url: "/documenti/arkhipov-quantum-magic-games.pdf"}, R.mermin1993],
   },
   {
-    id: "contabile",
+    id: "terzo-ospite",
     numero: "Capitolo 6",
+    titolo: "Un terzo ospite",
+    immagine: "/r04/6-terzo-ospite.svg",
+    alt: "Alice, Bob e Charlie in tre sale separate. Ognuno riceve un formato e sceglie un vino, senza comunicare con gli altri.",
+    domanda: "Che cosa cambia se la sfida coinvolge tre commensali in tre sale separate?",
+    Testo: () => (
+      <>
+        <P>La sera seguente Alice e Bob invitano Charlie. Lo chef fa accomodare i tre amici in tre sale separate: niente telefoni, biglietti o messaggi. Propone una nuova sfida in cui ciascuno deve scegliere un solo vino.</P>
+        <P>Prima di servire, i camerieri estraggono a sorte una delle quattro combinazioni ammesse, tutte con probabilità 25%: tre calici; un calice ad Alice e due bottiglie agli altri; un calice a Bob e due bottiglie agli altri; un calice a Charlie e due bottiglie agli altri. I formati non vengono estratti indipendentemente: lo chef garantisce che le bottiglie siano zero oppure due. L’estrazione è indipendente dagli accordi dei tre amici.</P>
+        <P>Ogni ospite vede soltanto il proprio formato e sceglie vino bianco o rosso. Conosce le regole, ma non conosce i formati assegnati agli altri due. I tre possono preparare un accordo prima di entrare; durante la cena non possono comunicare.</P>
+        <P>Lo chef conta i vini rossi delle tre sale e offre la cena se valgono queste regole:</P>
+        <ul className="ml-5 list-disc space-y-2">
+          <li>Con <strong>tre calici</strong>, i rossi devono essere <strong>pari: 0 oppure 2</strong>.</li>
+          <li>Con <strong>un calice e due bottiglie</strong>, in qualunque disposizione, i rossi devono essere <strong>dispari: 1 oppure 3</strong>.</li>
+        </ul>
+        <P>Un accordo classico può vincere al massimo tre domande su quattro, il 75%. Tre qubit entangled nello stato GHZ consentono invece una strategia quantistica ideale che vince sempre. Le singole risposte restano casuali: il risultato sorprendente si vede confrontando tutti e tre i vini.</P>
+        <P>Nel menù a cinque stelle Bob rispondeva per quattro piatti. Qui ciascuno risponde una volta sola: la novità è la relazione tra tre risposte, e il terzo ospite è indispensabile. Questa è una versione del gioco Mermin–GHZ, dal nome di Mermin e dello stato di Greenberger, Horne e Zeilinger.</P>
+      </>
+    ),
+    lezione: "Con tre ospiti e quattro combinazioni ammesse, nessun accordo classico supera il 75%: le quattro richieste di parità sono incompatibili con sei risposte prestabilite. Una strategia con uno stato GHZ arriva idealmente al 100%, senza comunicazione tra le sale.",
+    Sim: TerzoOspite,
+    guida: {
+      cosa: "Il gioco Mermin–GHZ con Alice, Bob e Charlie: ognuno vede un solo formato e sceglie un vino; la vittoria dipende dalla parità dei tre rossi.",
+      avvio: "Modifica i sei colori dell’accordo classico oppure seleziona le correlazioni GHZ ideali. Premi Una cena o Avvia 100 cene; puoi mettere in pausa e riprendere.",
+      leggere: "Le tre sale mostrano i formati e i vini dell’ultima cena nell’ordine Alice, Bob, Charlie. Confronta il conteggio dei rossi con la parità richiesta e osserva la percentuale di vittoria.",
+      mostra: "Le 64 strategie deterministiche vincono al 25% oppure al 75%. La strategia GHZ ideale vince sempre. Le scelte casuali indipendenti ed equiprobabili vincono al 50%.",
+    },
+    riferimenti: [{testo: "Gilles Brassard, Anne Broadbent e Alain Tapp, Quantum Pseudo-Telepathy, §3: gioco Mermin–GHZ e strategie classiche e quantistiche.", url: "https://arxiv.org/abs/quant-ph/0407221"}, R.mermin1990, R.mermin1993],
+  },
+  {
+    id: "contabile",
+    numero: "Capitolo 7",
     titolo: "Il contabile",
     immagine: "/r04/4-contabile.svg",
     alt: "Il contabile alla scrivania, stupito, mentre Alice e Bob alzano entrambi un calice di rosso.",
@@ -1813,7 +1845,7 @@ export const CAPITOLI = [
   },
   {
     id: "messaggi",
-    numero: "Capitolo 7",
+    numero: "Capitolo 8",
     titolo: "Nessun messaggio tra le sale",
     immagine: "/r04/5-messaggi.svg",
     alt: "Il cameriere di Bob sceglie in segreto calice o bottiglia; nella sala di Alice la colonna del registro dice sempre rosso 50%, bianco 50%; una busta barrata sul muro.",
@@ -1941,7 +1973,7 @@ export const CAPITOLI = [
   },
   {
     id: "trucchi",
-    numero: "Capitolo 8",
+    numero: "Capitolo 9",
     titolo: "Come si bara",
     immagine: "/r04/6-trucchi.svg",
     alt: "Il maître con il registro; un cameriere corre tra le sale e sussurra a Bob come è stata servita Alice.",
@@ -1962,7 +1994,7 @@ export const CAPITOLI = [
             <strong>Il cameriere chiacchierone.</strong> Un cameriere corre fra
             le sale e sussurra a <B /> come è stata servita <A />. Con questa
             notizia Bob sceglie il colore giusto quasi ogni sera. È proprio il
-            messaggio fra le sale che i camerieri cercavano nel capitolo 7: lì
+            messaggio fra le sale che i camerieri cercavano nel capitolo 8: lì
             non passava, qui passa davvero, perché qualcuno lo porta di persona.
           </li>
           <li className="leading-relaxed">
@@ -1988,7 +2020,7 @@ export const CAPITOLI = [
         <P>
           C'è infine un quarto ristorante, solo immaginato: il super-stregato.
           Vince la sfida dello chef tutte le sere (S = 4), eppure, come nel
-          capitolo 7, la colonna di Alice resta metà rossi e metà bianchi:
+          capitolo 8, la colonna di Alice resta metà rossi e metà bianchi:
           nessun messaggio passa fra le sale. Non viola nessuna delle regole del
           racconto, ma la natura non lo permette: il ristorante stregato vero si
           ferma a 2,83. Perché proprio lì è una domanda ancora aperta.
@@ -2069,7 +2101,7 @@ export const CAPITOLI = [
   },
   {
     id: "alveare",
-    numero: "Capitolo 9",
+    numero: "Capitolo 10",
     titolo: "La sala a nido d'ape",
     immagine: "/r04/7-alveare.svg",
     alt: "Una sala con 37 tavoli esagonali numerati da 1 a 9; Alice e Bob ai lati.",
@@ -2170,7 +2202,7 @@ export const CAPITOLI = [
   },
   {
     id: "venti",
-    numero: "Capitolo 10",
+    numero: "Capitolo 11",
     titolo: "Il gioco dei venti",
     immagine: "/r04/8-terrazza.svg",
     alt: "Alice e Bob in terrazza davanti a una rosa dei venti.",
@@ -2213,7 +2245,7 @@ export const CAPITOLI = [
   },
   {
     id: "terrazza",
-    numero: "Capitolo 11",
+    numero: "Capitolo 12",
     titolo: "Insieme in terrazza",
     immagine: "/r04/8-terrazza-cena.svg",
     alt: "Alice e Bob allo stesso tavolo in terrazza; il cameriere guarda Alice mentre serve il vino.",

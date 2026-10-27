@@ -30,13 +30,18 @@ Le simulazioni riproducono statistiche matematiche: non costituiscono un esperim
 
 ## Terrazza — modello delle ordinazioni
 
-Il capitolo 11, «Insieme in terrazza», usa `sim/SimTerrazza.jsx` e `logica/terrazza.js`.
+Il capitolo 12, «Insieme in terrazza», usa `sim/SimTerrazza.jsx` e `logica/terrazza.js`.
 I piatti sono estratti indipendentemente; colore e formato dipendono da entrambi i piatti. Alice e Bob seguono sempre le proprie regole. Il cameriere inverte il formato richiesto con probabilità 20%, mantenendo il colore: il registro del servizio ha S atteso = 2,4. Senza errori S sarebbe 4. Il modello è narrativo, con parametri fissi e decisioni che conoscono entrambi i piatti; non usa dati sperimentali sui venti.
 
 La versione precedente è salvata in `backups/terrazza-dei-venti-20261025-113910`; il simulatore R59 rimane intatto nell’archivio.
 
-Il capitolo 10, «Il gioco dei venti» (`/#venti`), reintroduce il gioco cognitivo con una narrazione distinta e il simulatore sintetico R59. Il riferimento sperimentale (S circa 2,48) è separato dai dati generati. Il capitolo 11 mantiene `/#terrazza`, con i conti dettagliati in un accordion e il parallelo con la fisica.
+Il capitolo 11, «Il gioco dei venti» (`/#venti`), reintroduce il gioco cognitivo con una narrazione distinta e il simulatore sintetico R59. Il riferimento sperimentale (S circa 2,48) è separato dai dati generati. Il capitolo 12 mantiene `/#terrazza`, con i conti dettagliati in un accordion e il parallelo con la fisica.
 
 ## Il menù a cinque stelle
 
 Il capitolo 5, «Il menù a cinque stelle» (`/#stelle`), è dedicato a un laboratorio sul pentagramma magico di Mermin: dieci piatti, cinque percorsi, protocollo punto-percorso con 20 domande uniformi. Il limite classico è 19/20 (95%), distinto dall’8/9 del quadrato. La simulazione ideale quantistica vince sempre e campiona quartine a parità fissata. Il modello e le osservabili sono in `logica/stella.js`, l’interfaccia in `sim/MenuStelle.jsx`. I test verificano tutti i 1024 colori di Alice, i prodotti delle osservabili e le simulazioni.
+
+
+## Un terzo ospite
+
+Il capitolo 6 (`/#terzo-ospite`) presenta Mermin–GHZ con tre sale, quattro domande equiprobabili e input vincolati a zero o due bottiglie. Limite classico 75%, quantistico ideale 100%. Include sei risposte modificabili, 64 accordi, simulazione animata di 100 cene, dimostrazione di parità e misure X/Y sullo stato GHZ. Modello `logica/ghz.js`, interfaccia `sim/TerzoOspite.jsx`.
