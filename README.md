@@ -14,6 +14,9 @@ Dipendenze già installate. Su un altro computer: `npm ci`. Per produzione: `npm
 
 ## Struttura
 
+- `/laboratorio`: laboratorio CHSH autonomo, accessibile dall’invito alla fine del capitolo 3, «La sfida dello chef». Il collegamento di ritorno conserva il capitolo di partenza tramite il parametro `capitolo`.
+- `src/components/laboratorio`: componente React, stili e modello del laboratorio, con confronto classico/quantistico e approfondimenti interattivi. Tutti i sorgenti sono locali all’app.
+
 - `src/app`: pagina principale, layout, favicon e stile Tailwind.
 - `src/components/ristorante`: sorgenti R04, navigazione fra capitoli, simulazioni e logica.
 - `src/components/archivio/R59`: simulazione della terrazza.

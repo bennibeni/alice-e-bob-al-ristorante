@@ -13,7 +13,7 @@ import {
   semeCasuale,
   seraSfida,
   tutteLeStrategie,
-} from "../logica/ristorante";
+} from "../logica/sfidaLaboratorio";
 import {
   Barra,
   Dato,
@@ -77,7 +77,7 @@ function Tabellino({ titolo, stat, atteso, colore }) {
 }
 
 function Registro({ celle }) {
-  const E = celle.map((r) => r.map((c) => (c.n ? (2 * c.u) / c.n - 1 : null)));
+  const E = celle.map((r) => r.map((c) => (c.n ? 1 - (2 * c.u) / c.n : null)));
   const completo = E.every((r) => r.every((v) => v !== null));
   const S = completo ? E[0][0] + E[0][1] + E[1][0] - E[1][1] : null;
   return (
@@ -87,7 +87,7 @@ function Registro({ celle }) {
       </p>
       <table className="text-center text-sm">
         <caption className="sr-only">
-          Media di +1 (stesso colore) e −1 (colori diversi) per formato
+          Media di +1 (colori diversi) e −1 (stesso colore) per formato
         </caption>
         <thead>
           <tr>
@@ -144,8 +144,8 @@ export function SfidaChef() {
   const [strategia, setStrategia] = useState({
     a0: BIANCO,
     a1: BIANCO,
-    b0: BIANCO,
-    b1: BIANCO,
+    b0: ROSSO,
+    b1: ROSSO,
   });
   const delta = DELTA_OTTIMALE;
   const [attivo, setAttivo] = useState(false);
@@ -287,8 +287,8 @@ export function SfidaChef() {
         <Riquadro titolo="Ristorante stregato · nessun piano">
           <p className="mb-3 text-sm">
             Qui Alice e Bob non hanno nessun piano: ordinano e basta. Il
-            registro mostra i tre fatti del problema: colori uguali circa 85
-            volte su 100 se c'è almeno un calice, diversi circa 85 volte su 100
+            registro mostra i tre fatti del problema: colori diversi circa 85
+            volte su 100 se c'è almeno un calice, uguali circa 85 volte su 100
             con due bottiglie.
           </p>
           <Tabellino

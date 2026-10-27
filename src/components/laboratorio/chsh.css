@@ -1,0 +1,507 @@
+.chsh-game {
+  --ink: #183737;
+  --green: #17675b;
+  --cream: #f7f4ec;
+  max-width: 1000px;
+  margin: auto;
+  padding: 32px 20px 60px;
+  background: var(--cream);
+  color: var(--ink);
+  font:
+    16px/1.65 system-ui,
+    sans-serif;
+  border-radius: 24px;
+}
+.chsh-game * {
+  box-sizing: border-box;
+}
+.chsh-game header {
+  padding: 12px 6px 24px;
+}
+.chsh-eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  font-weight: 700;
+  color: var(--green);
+}
+.chsh-game h1 {
+  font:
+    clamp(36px, 6vw, 60px)/1.1 Georgia,
+    serif;
+  margin: 14px 0;
+}
+.chsh-game h2 {
+  font:
+    28px Georgia,
+    serif;
+  margin: 0 0 16px;
+}
+.chsh-game p {
+  margin: 12px 0;
+}
+.chsh-panel {
+  background: white;
+  border: 1px solid #dedfd6;
+  border-radius: 18px;
+  padding: 24px;
+  margin: 18px 0;
+}
+.chsh-cases {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 20px;
+}
+.chsh-cases > div {
+  background: var(--cream);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.chsh-cases strong {
+  font-size: 26px;
+}
+.chsh-game small {
+  font-size: 12px;
+}
+.chsh-tabs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.chsh-game button,
+.chsh-game select {
+  font: inherit;
+  border-radius: 9px;
+  padding: 10px 14px;
+  border: 1px solid #b5c9c3;
+  background: white;
+  color: var(--ink);
+}
+.chsh-game button {
+  cursor: pointer;
+}
+.chsh-game button[aria-pressed="true"] {
+  background: var(--green);
+  color: white;
+  border-color: var(--green);
+}
+.chsh-game button:hover {
+  box-shadow: 0 0 0 2px #94b7ab;
+}
+.chsh-game :focus-visible {
+  outline: 3px solid #cc8636;
+  outline-offset: 3px;
+}
+.chsh-players {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.chsh-players label {
+  font-weight: 700;
+}
+.chsh-game select {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+}
+.chsh-muted {
+  color: #526765;
+  font-size: 14px;
+}
+.chsh-scroll {
+  overflow-x: auto;
+}
+.chsh-game table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: center;
+}
+.chsh-game caption {
+  text-align: left;
+  font-size: 14px;
+  padding-bottom: 12px;
+}
+.chsh-game th,
+.chsh-game td {
+  padding: 8px;
+  border-bottom: 1px solid #e5ebe7;
+}
+.chsh-game td button {
+  width: 100%;
+  min-width: 62px;
+}
+.chsh-results {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.chsh-results > div > span,
+.chsh-results > div > small {
+  display: block;
+}
+.chsh-results strong {
+  font-size: 36px;
+  display: block;
+  color: var(--green);
+}
+.chsh-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.chsh-results > p {
+  width: 100%;
+  margin: 0;
+}
+.chsh-history {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.chsh-history li {
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+.chsh-win {
+  background: #e3f3e8;
+}
+.chsh-loss {
+  background: #fbe9e4;
+}
+.chsh-game summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+@media (max-width: 600px) {
+  .chsh-game {
+    padding: 20px 12px;
+  }
+  .chsh-panel {
+    padding: 18px;
+  }
+  .chsh-cases {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .chsh-players {
+    grid-template-columns: 1fr;
+  }
+  .chsh-game th,
+  .chsh-game td {
+    padding: 4px;
+  }
+}
+.chsh-game .chsh-format-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  stroke-width: 1.7;
+  color: #000;
+}
+.chsh-format-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.chsh-format-pair {
+  display: flex;
+  gap: 20px;
+  margin: 8px 0 14px;
+}
+.chsh-format-person {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.chsh-format-person small {
+  font-weight: 500;
+  color: #526765;
+}
+.chsh-game .chsh-format-person .chsh-format-icon {
+  width: 30px;
+  height: 30px;
+}
+.chsh-wine-dot {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.chsh-wine-dot-green {
+  background-color: #22834a;
+}
+.chsh-wine-dot-red {
+  background-color: #ce3434;
+}
+.chsh-strategy-menu {
+  margin-top: 8px;
+  border: 1px solid #b5c9c3;
+  border-radius: 9px;
+  background: white;
+}
+.chsh-strategy-menu summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  list-style: none;
+}
+.chsh-strategy-menu summary::-webkit-details-marker {
+  display: none;
+}
+.chsh-strategy-menu summary > :last-child {
+  margin-left: auto;
+}
+.chsh-strategy-icons {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.chsh-strategy-icons svg {
+  width: 26px;
+  height: 26px;
+  stroke-width: 2;
+}
+.chsh-strategy-green {
+  color: #22834a;
+}
+.chsh-strategy-red {
+  color: #ce3434;
+}
+.chsh-strategy-list {
+  display: grid;
+  gap: 6px;
+  padding: 8px;
+  border-top: 1px solid #b5c9c3;
+}
+.chsh-strategy-list button {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.chsh-game .chsh-strategy-list button[aria-pressed="true"] {
+  background: #eff4f1;
+  color: var(--ink);
+  border: 2px solid var(--green);
+}
+.chsh-game .chsh-format-icon.chsh-format-green {
+  color: #22834a;
+}
+.chsh-game .chsh-format-icon.chsh-format-red {
+  color: #ce3434;
+}
+.chsh-strategy-explanation {
+  margin-top: 24px;
+}
+.chsh-strategy-explanation h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.chsh-game .chsh-strategies-info {
+  display: inline-flex;
+  border: 0;
+  padding: 5px;
+  color: var(--green);
+  background: transparent;
+}
+.chsh-guide-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: rgb(0 0 0 / 45%);
+}
+.chsh-guide-modal {
+  width: min(700px, 100%);
+  max-height: 85dvh;
+  overflow-y: auto;
+  background: white;
+  color: #183737;
+  border-radius: 18px;
+  box-shadow: 0 20px 70px rgb(0 0 0 / 25%);
+  font:
+    16px/1.65 system-ui,
+    sans-serif;
+}
+.chsh-guide-dialog {
+  padding: 24px;
+  outline: none;
+}
+.chsh-guide-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+.chsh-guide-heading h2 {
+  font:
+    28px/1.25 Georgia,
+    serif;
+  margin: 0;
+}
+.chsh-guide-close {
+  display: flex;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 5px;
+  cursor: pointer;
+}
+.chsh-guide-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+.chsh-guide-table caption {
+  text-align: left;
+  color: #526765;
+  font-size: 14px;
+}
+.chsh-guide-table th,
+.chsh-guide-table td {
+  padding: 8px;
+  border-bottom: 1px solid #e5ebe7;
+}
+.chsh-guide-modal :focus-visible {
+  outline: 3px solid #cc8636;
+  outline-offset: 3px;
+}
+.chsh-case-goal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  border-top: 1px solid #dedfd6;
+  padding: 12px 0;
+  width: 100%;
+}
+.chsh-case-goal > small {
+  font-weight: 700;
+}
+.chsh-case-examples {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chsh-case-examples > span {
+  display: inline-flex;
+  gap: 4px;
+}
+.chsh-history li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.chsh-round-pair {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.chsh-theoretical {
+  width: 100%;
+}
+.chsh-theoretical-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.chsh-theoretical-group {
+  border: 1px solid #dedfd6;
+  border-radius: 12px;
+  padding: 12px;
+}
+.chsh-theoretical-group h4 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 0 12px;
+}
+.chsh-theoretical-outcome {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  margin-top: 6px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+.chsh-theoretical-outcome > b {
+  margin-left: auto;
+}
+@media (max-width: 600px) {
+  .chsh-theoretical-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.chsh-proof-steps {
+  padding-left: 24px;
+}
+.chsh-proof-steps > li {
+  padding: 14px 0;
+  border-bottom: 1px solid #e5ebe7;
+}
+.chsh-proof-pair {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.chsh-proof-pair > span {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.chsh-game .chsh-proof-pair .chsh-format-icon {
+  width: 32px;
+  height: 32px;
+}
+.chsh-proof-failure {
+  color: #a52a2a;
+}
+.chsh-proof-math {
+  margin-top: 20px;
+  padding: 16px;
+  background: #f7f4ec;
+  border-radius: 12px;
+}
+.chsh-proof-equations {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  font-size: 20px;
+}
+.chsh-definition-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+}
+.chsh-definition-formula {
+  padding: 12px;
+  border-radius: 8px;
+  background: #f7f4ec;
+  overflow-wrap: anywhere;
+  font-size: 18px;
+}

@@ -9,7 +9,6 @@
 import { BottleWine, Wine } from "lucide-react";
 import dynamic from "next/dynamic";
 import { Problema } from "./problema";
-import { LezioneEsterna } from "./lezione";
 import { TabellaAccordi } from "./sim/TabellaAccordi";
 import { TeoremaBell } from "./teorema";
 import { ParalleloFisica } from "./ParalleloFisica";
@@ -393,7 +392,7 @@ function SchedeSfida({ alice, bob }) {
           {[0, 1].flatMap((a) =>
             [0, 1].map((b) => {
               const uguali = alice[a] === bob[b];
-              const vinta = a === 1 && b === 1 ? !uguali : uguali;
+              const vinta = a === 1 && b === 1 ? uguali : !uguali;
               return (
                 <tr key={`${a}${b}`}>
                   <td className="pr-3">{FORMATI[a]}</td>
@@ -1064,9 +1063,9 @@ export const CAPITOLI = [
               <P>
                 <A /> e <B />, che non sanno come è stato servito l'altro,
                 scelgono solo il colore: rosso o bianco. Lo chef offre la cena
-                se i due colori sono uguali, tranne quando arrivano due
-                bottiglie: due bottiglie dello stesso vino sarebbero uno spreco,
-                e allora i colori devono essere diversi. Il registro speciale
+                se i due colori sono diversi, tranne quando arrivano due
+                bottiglie: in quel caso lo chef richiede lo stesso vino
+                per entrambi. Il registro speciale
                 annota, sera dopo sera e per ciascuna sala, il formato e il
                 colore.{" "}
                 <strong>
@@ -1084,14 +1083,14 @@ export const CAPITOLI = [
                 "Nel registro di Alice (o di Bob), sia con il calice sia con la bottiglia, metà delle sere c'è rosso e metà bianco.",
             },
             {
-              titolo: "Se c'è almeno un calice, colori quasi sempre uguali.",
+              titolo: "Se c'è almeno un calice, colori quasi sempre diversi.",
               testo:
-                "In queste sere Alice e Bob ordinano lo stesso colore circa 85 volte su 100.",
+                "In queste sere Alice e Bob ordinano colori diversi circa 85 volte su 100.",
             },
             {
-              titolo: "Con due bottiglie, colori quasi sempre diversi.",
+              titolo: "Con due bottiglie, colori quasi sempre uguali.",
               testo:
-                "In queste sere ordinano colori diversi circa 85 volte su 100.",
+                "In queste sere ordinano colori uguali circa 85 volte su 100.",
             },
           ]}
           indagine={
@@ -1112,10 +1111,10 @@ export const CAPITOLI = [
                 sua, con un colore per il calice e uno per la bottiglia. Se ne
                 hanno preparate diverse, il sorteggio sulla porta sceglie quali
                 usare quella sera; durante la cena ognuno segue la propria. Per
-                esempio, con il piano «sempre bianco», ecco le due schede e che
+                esempio, con il piano «Alice sempre bianco, Bob sempre rosso», ecco le due schede e che
                 cosa succede nelle quattro combinazioni di formati:
               </P>
-              <SchedeSfida alice="BB" bob="BB" />
+              <SchedeSfida alice="BB" bob="RR" />
               <P>
                 Nessuna coppia di schede vince tutte e quattro le combinazioni.
                 Proviamo a vincerle tutte e vediamo dove si inceppa (= vuol dire
@@ -1124,13 +1123,13 @@ export const CAPITOLI = [
               <ol className="ml-5 list-decimal space-y-2">
                 <li>
                   <strong>Calice con calice:</strong> per vincere servono colori
-                  uguali.
-                  <Confronto a={["Alice", "calice"]} b={["Bob", "calice"]} />
+                  diversi.
+                  <Confronto a={["Alice", "calice"]} b={["Bob", "calice"]} uguali={false} />
                 </li>
                 <li>
                   <strong>Bottiglia di Alice con calice di Bob:</strong> anche
-                  qui colori uguali.
-                  <Confronto a={["Alice", "bottiglia"]} b={["Bob", "calice"]} />
+                  qui colori diversi.
+                  <Confronto a={["Alice", "bottiglia"]} b={["Bob", "calice"]} uguali={false} />
                 </li>
                 <li>
                   <strong>Quindi</strong>, dai passi 1 e 2, Alice ordina lo
@@ -1142,30 +1141,30 @@ export const CAPITOLI = [
                 </li>
                 <li>
                   <strong>Calice di Alice con bottiglia di Bob:</strong> colori
-                  uguali anche qui.
-                  <Confronto a={["Alice", "calice"]} b={["Bob", "bottiglia"]} />
+                  diversi anche qui.
+                  <Confronto a={["Alice", "calice"]} b={["Bob", "bottiglia"]} uguali={false} />
                 </li>
                 <li>
-                  <strong>Quindi</strong>, dai passi 3 e 4, anche le due
-                  bottiglie hanno lo stesso colore.
-                  <Confronto
-                    a={["Alice", "bottiglia"]}
-                    b={["Bob", "bottiglia"]}
-                  />
-                </li>
-                <li>
-                  <strong>Ma</strong> con due bottiglie, per vincere, i colori
-                  devono essere diversi: il passo 5 lo impedisce.
+                  <strong>Quindi</strong>, dai passi 3 e 4, le due
+                  bottiglie hanno colori diversi.
                   <Confronto
                     a={["Alice", "bottiglia"]}
                     b={["Bob", "bottiglia"]}
                     uguali={false}
                   />
                 </li>
+                <li>
+                  <strong>Ma</strong> con due bottiglie, per vincere, i colori
+                  devono essere uguali: il passo 5 lo impedisce.
+                  <Confronto
+                    a={["Alice", "bottiglia"]}
+                    b={["Bob", "bottiglia"]}
+                  />
+                </li>
               </ol>
               <P>
                 Ogni coppia di schede perde quindi almeno una combinazione su
-                quattro. Il piano «sempre bianco», come si vede nella tabella,
+                quattro. Il piano «Alice sempre bianco, Bob sempre rosso», come si vede nella tabella,
                 perde solo le due bottiglie e vince 3 sere su 4; mescolare le
                 schede da una sera all'altra fa solo la media (e tirando a sorte
                 sulla porta se scambiare tutti i colori si ottiene anche il
@@ -1180,7 +1179,7 @@ export const CAPITOLI = [
             <>
               <P>
                 <strong>Lo scenario in fisica.</strong> Una sorgente emette
-                coppie di fotoni, sempre preparate nello stesso modo, e le manda
+                coppie di fotoni nello stato entangled di polarizzazione Φ⁺, e le manda
                 verso due rivelatori lontani. Davanti a ogni rivelatore c'è un
                 filtro di polarizzazione con due sole posizioni: per Alice 0° o
                 45°, per Bob 22,5° o −22,5°. Ogni fotone passa o non passa il
@@ -1192,7 +1191,7 @@ export const CAPITOLI = [
                 dall'altro e da ciò che è successo alla sorgente. Con questi
                 angoli la meccanica quantistica prevede esiti uguali circa 85
                 volte su 100 in tre combinazioni e diversi circa 85 volte su 100
-                nella quarta (−22,5° per Bob con 45° per Alice): sono i tre
+                nella quarta (−22,5° per Bob con 45° per Alice): Invertendo i nomi dei due esiti di Bob si ottengono i tre
                 fatti del ristorante stregato. Con proprietà nascoste portate
                 dalla sorgente si arriva al massimo a 75 su 100, cioè S ≤ 2. È
                 la forma del <TeoremaBell /> usata negli esperimenti veri, da
@@ -1215,10 +1214,10 @@ export const CAPITOLI = [
                   ],
                   ["Alice: 0° o 45°", "Alice: calice o bottiglia"],
                   ["Bob: 22,5° o −22,5°", "Bob: calice o bottiglia"],
-                  ["Esito: passa (+) / non passa (−)", "Vino rosso / bianco"],
+                  ["Alice: passa / non passa; Bob: etichette invertite", "Vino rosso / bianco"],
                   [
-                    "Esiti uguali circa 85 volte su 100, tranne −22,5° con 45°",
-                    "Colori uguali, tranne con due bottiglie",
+                    "Esiti con Bob rietichettato: diversi circa 85 volte su 100, tranne −22,5° con 45°",
+                    "Colori diversi, tranne con due bottiglie",
                   ],
                   [
                     "Numero S dei correlatori: ≤ 2 con proprietà nascoste, 2√2 nei dati",
@@ -1246,12 +1245,12 @@ export const CAPITOLI = [
           </li>
           <li className="leading-relaxed">
             <strong>Dà un punteggio a ogni sera:</strong> +1 se i colori sono
-            uguali, −1 se sono diversi.
+            diversi, −1 se sono uguali.
           </li>
           <li className="leading-relaxed">
             <strong>In ogni gruppo fa la media dei punteggi.</strong> Viene un
-            numero fra −1 (colori sempre diversi) e +1 (sempre uguali); per
-            esempio, con colori uguali in 85 sere su 100 la media è 0,85 − 0,15
+            numero fra −1 (colori sempre uguali) e +1 (sempre diversi); per
+            esempio, con colori diversi in 85 sere su 100 la media è 0,85 − 0,15
             = 0,70.
           </li>
           <li className="leading-relaxed">
@@ -1259,7 +1258,7 @@ export const CAPITOLI = [
               Somma le medie dei primi tre gruppi e sottrae quella delle due
               bottiglie.
             </strong>{" "}
-            Il meno c'è perché con due bottiglie lo chef vuole colori diversi:
+            Il meno c'è perché con due bottiglie lo chef vuole colori uguali:
             così ogni gruppo conta in positivo quando Alice e Bob fanno quello
             che serve per vincere.
           </li>
@@ -1291,7 +1290,7 @@ export const CAPITOLI = [
             <tbody className="text-center">
               <tr className="border-t border-zinc-200 dark:border-zinc-800">
                 <th scope="row" className="py-1 pr-4 text-left font-normal">
-                  Piano «sempre bianco»
+                  Alice bianco, Bob rosso
                 </th>
                 <td>+1</td>
                 <td>+1</td>
@@ -1321,20 +1320,16 @@ export const CAPITOLI = [
           4. È la stessa sfida vista dal registro, e la forma del{" "}
           <TeoremaBell /> usata in tutti gli esperimenti veri.
         </P>
-        <LezioneEsterna
-          src="/chsh-game.html"
-          titolo="Approfondimento: il gioco CHSH"
-          nota="lezione di IBM Quantum Learning, in inglese"
-        />
+
       </>
     ),
     lezione:
       "Ristorante normale: al massimo 75% di cene offerte, S ≤ 2. Ristorante stregato: 85,4%, S ≈ 2,83, senza che le sale comunichino.",
     Sim: SfidaChef,
     guida: {
-      cosa: "Ogni sera il cameriere di ciascuna sala decide a caso se servire in calice o in bottiglia. Lo chef offre la cena se i colori sono uguali, ma con due bottiglie devono essere diversi. A sinistra Alice e Bob nel ristorante normale con un piano deciso prima; a destra il ristorante stregato, dove Alice e Bob non hanno nessun piano.",
+      cosa: "Ogni sera il cameriere di ciascuna sala decide a caso se servire in calice o in bottiglia. Lo chef offre la cena se i colori sono diversi, ma con due bottiglie devono essere uguali. A sinistra Alice e Bob nel ristorante normale con un piano deciso prima; a destra il ristorante stregato, dove Alice e Bob non hanno nessun piano.",
       avvio:
-        "A sinistra scegli il colore che Alice e Bob ordineranno per ogni formato (si parte da «sempre bianco»); Poi premi «Fai partire le cene» o «Una cena».",
+        "A sinistra scegli il colore che Alice e Bob ordineranno per ogni formato (si parte da Alice sempre bianco e Bob sempre rosso); Poi premi «Fai partire le cene» o «Una cena».",
       leggere:
         "Per ogni ristorante: la percentuale di cene offerte con la barra (tacche 75% e 85,4%) e, sotto, il registro del maître con le quattro medie e il numero S.",
       mostra:

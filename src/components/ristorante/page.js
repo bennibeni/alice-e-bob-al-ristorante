@@ -5,6 +5,7 @@
 // Il capitolo aperto è nell'hash dell'URL (/R04#sfida).
 
 import { ChevronLeft, ChevronRight, Lightbulb } from "lucide-react";
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { CAPITOLI } from "./capitoli";
 import { TeoremaBell } from "./teorema";
@@ -39,6 +40,7 @@ function Indice({ corrente, onScegli }) {
           </li>
         ))}
       </ol>
+
     </nav>
   );
 }
@@ -149,6 +151,23 @@ export default function Page() {
                 {capitolo.avvertenzaSim || "Il programma simula le statistiche quantistiche; non realizza un esperimento fisico con due sistemi isolati."}
               </p>
             </section>
+          )}
+
+          {capitolo.id === "sfida" && (
+            <Link
+              href="/laboratorio?capitolo=sfida"
+              className="block rounded-lg border border-emerald-300 bg-emerald-50 px-4 py-4 font-semibold text-emerald-900 hover:bg-emerald-100"
+            >
+              <span className="block">Esplora la sfida nel Laboratorio CHSH →</span>
+              <span className="mt-2 block text-sm font-normal">
+                Scoprirai meglio quali accordi fanno vincere più spesso Alice e Bob,
+                perché nessuna strategia classica supera il 75% e come le
+                correlazioni quantistiche permettono di arrivare all’85,36%.
+                Scegli le strategie, simula le cene e confronta i risultati.
+                Potrai anche approfondire con la lezione di IBM Quantum
+                Learning sul gioco CHSH, in inglese.
+              </span>
+            </Link>
           )}
 
           <div className="flex justify-between gap-2 border-t border-zinc-200 pt-4 dark:border-zinc-800">
