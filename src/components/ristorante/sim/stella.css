@@ -12,3 +12,27 @@
 .stelle-outcome-flag { font-size: 22px; font-weight: 700; }
 .stelle-flag-win { color: #207843; }
 .stelle-flag-loss { color: #bd2639; }
+.stelle-observable-term { white-space: nowrap; }
+.menu-stelle .stelle-observable-info { display: inline-flex; align-items: center; vertical-align: middle; padding: 3px; margin-left: 3px; border: 0; background: transparent; color: #6541a0; }
+.stelle-observable-overlay { position: fixed; inset: 0; z-index: 1000; background: rgb(0 0 0 / 45%); display: flex; justify-content: center; align-items: center; padding: 20px; }
+.stelle-observable-modal { width: min(660px,100%); max-height: 85dvh; overflow-y: auto; background: white; color: #203829; border-radius: 16px; box-shadow: 0 20px 60px #0003; font: 16px/1.65 system-ui,sans-serif; }
+.stelle-observable-dialog { padding: 24px; outline: none; }
+.stelle-observable-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.stelle-observable-heading h2 { font: 28px/1.25 Georgia,serif; margin: 0; }
+.stelle-observable-close { display: flex; padding: 4px; background: transparent; color: inherit; border: 0; cursor: pointer; }
+.stelle-observable-dialog h3 { font-weight: 700; margin: 20px 0 10px; }
+.stelle-observable-dialog p { margin: 14px 0; }
+.stelle-observable-dialog ul { list-style: disc; padding-left: 24px; }
+.stelle-observable-dialog li { margin: 10px 0; }
+.stelle-observable-dialog summary { cursor: pointer; font-weight: 700; }
+.stelle-observable-modal :focus-visible { outline: 3px solid #b77b1e; outline-offset: 3px; }
+.stelle-concept-formula { background: #f5f3ed; padding: 12px; border-radius: 8px; overflow-wrap: anywhere; }
+.stelle-concept-matrices { display: flex; flex-wrap: wrap; gap: 16px; }
+.stelle-concept-matrices pre { padding: 10px; border-radius: 8px; background: #f5f3ed; line-height: 1.6; }
+.menu-stelle .stelle-construction h4 { margin: 22px 0 10px; font-size: 17px; }
+.menu-stelle .stelle-construction ol { list-style: decimal; padding-left: 24px; }
+.menu-stelle .stelle-construction ul { list-style: disc; padding-left: 24px; }
+.menu-stelle .stelle-construction li { margin: 10px 0; }
+.stelle-construction-choices { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+.stelle-construction mark { background: #fff0b8; color: #203829; padding: 2px 4px; border-radius: 4px; }
+.menu-stelle .stelle-construction { background: #eef5ff; border: 1px solid #bfd2ed; border-radius: 12px; padding: 18px; }
