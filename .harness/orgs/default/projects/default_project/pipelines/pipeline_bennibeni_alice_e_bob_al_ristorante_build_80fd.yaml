@@ -1,0 +1,41 @@
+pipeline:
+  id: pipeline_bennibeni_alice_e_bob_al_ristorante_build_80fd
+  name: pipeline_bennibeni_alice_e_bob_al_ristorante_build_80fd
+  stages:
+    - name: Build and Test
+      id: build_and_test
+      runtime: cloud
+      platform:
+        os: linux
+        arch: amd64
+      clone:
+        enabled: true
+      cache:
+        enabled: true
+      steps:
+        - name: Install Dependencies
+          id: install_dependencies
+          run:
+            shell: bash
+            script: |-
+              node --version
+              npm --version
+              npm ci
+        - name: Build
+          id: build
+          run:
+            shell: bash
+            script: npm run build
+        - name: Test
+          id: test
+          run:
+            shell: bash
+            script: |-
+              mkdir -p .harness/reports
+              npx vitest run --reporter=junit --outputFile=.harness/reports/junit.xml
+            report:
+              type: junit
+              paths:
+                - .harness/reports/junit.xml
+  tags:
+    onboarding: "true"
